@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -70,7 +69,7 @@ public class CharacterController2D : MonoBehaviour
                     OnLandEvent.Invoke();
             }
         }
-        CoyoteTimer = Math.Max(CoyoteTimer - 1, 0);
+        CoyoteTimer = Mathf.Max(CoyoteTimer - 1, 0);
     }
     
 
@@ -137,10 +136,13 @@ public class CharacterController2D : MonoBehaviour
                 Flip();
             }
         }
+        // Fall faster
         if(m_Rigidbody2D.velocity.y < 0)
         {
             m_Rigidbody2D.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        }else if(m_Rigidbody2D.velocity.y > 0 && !bounced && !jump)
+        }
+        // Fall faster after releasing jump key
+        else if(m_Rigidbody2D.velocity.y > 0 && !bounced && !jump) 
         {
             m_Rigidbody2D.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
@@ -152,6 +154,7 @@ public class CharacterController2D : MonoBehaviour
             if(m_Rigidbody2D.velocity.y < 0) m_Rigidbody2D.velocity *= Vector2.right;
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
         }
+        
     }
 
 
