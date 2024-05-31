@@ -7,20 +7,21 @@ using UnityEngine.UIElements;
 
 public class CharacterController2D : MonoBehaviour
 {
-    [SerializeField] private float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
-    [Range(0, 1)][SerializeField] private float m_CrouchSpeed = .36f;           // Amount of maxSpeed applied to crouching movement. 1 = 100%
-    [Range(0, .3f)][SerializeField] private float m_MovementSmoothing = .05f;   // How much to smooth out the movement
-    [SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
-    [SerializeField] private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
-    [SerializeField] private Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
-    [SerializeField] private Transform m_CeilingCheck;                          // A position marking where to check for ceilings
-    [SerializeField] private Collider2D m_CrouchDisableCollider;                // A collider that will be disabled when crouching
-    [SerializeField] private float m_GroundBuff;                                // Distance above ground is alloed to jump
-    [SerializeField] private int m_CoyoteTime;                                  // Coyote time 
-    [SerializeField] private float lowJumpMultiplier = 2.0f;
-    [SerializeField] private float fallMultiplier = 2.5f; 
-    public bool bounced = false;
+    [SerializeField]                    private float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
+    [Range(0, 1)][SerializeField]       private float m_CrouchSpeed = .36f;                        // Amount of maxSpeed applied to crouching movement. 1 = 100%
+    [Range(0, .3f)][SerializeField]     private float m_MovementSmoothing = .05f;                  // How much to smooth out the movement
+    [Range(0f, 50f)][SerializeField]    private float maxHorizontalSpeed;                          // The walk speed of the player
+    [SerializeField]                    private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
+    [SerializeField]                    private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
+    [SerializeField]                    private Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
+    [SerializeField]                    private Transform m_CeilingCheck;                          // A position marking where to check for ceilings
+    [SerializeField]                    private Collider2D m_CrouchDisableCollider;                // A collider that will be disabled when crouching
+    [SerializeField]                    private float m_GroundBuff;                                // Distance above ground is alloed to jump
+    [SerializeField]                    private int m_CoyoteTime;                                  // Coyote time 
+    [SerializeField]                    private float lowJumpMultiplier = 2.0f;
+    [SerializeField]                    private float fallMultiplier = 2.5f; 
 
+    public bool bounced = false;
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
     private bool m_Grounded;            // Whether or not the player is grounded.
     const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
@@ -70,6 +71,8 @@ public class CharacterController2D : MonoBehaviour
             }
         }
         CoyoteTimer = Mathf.Max(CoyoteTimer - 1, 0);
+
+        Move(Input.GetAxisRaw("Horizontal") * maxHorizontalSpeed * Time.fixedDeltaTime, Input.GetButton("Crouch"), Input.GetButtonDown("Jump"), Input.GetButton("Jump"));
     }
     
 

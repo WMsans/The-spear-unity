@@ -5,22 +5,29 @@ using UnityEngine;
 
 public class SpearStateManager : MonoBehaviour
 {
-    [SerializeField] Rigidbody2D _playerRd;
+    [SerializeField] CharacterStateManager _player;
     [SerializeField] Transform _spearHead; 
-    public Camera cam;
-    public Rigidbody2D rd;
-    [Range(0f, 1f)] public float spearPokeSpeed;
-    [Range(0f, 5f)] public float spearPokeDistance; 
+    [SerializeField] Camera cam;
+    [Range(0f, 1f)][SerializeField] float spearPokeSpeed;
+    [Range(0f, 5f)][SerializeField] float spearPokeDistance;
+    [Range(0f, 5f)][SerializeField] float spearSpinSpeed; 
 
     SpearBaseState currentState;
-    public SpearNormalState normalState = new();
-    public SpearAnchorState anchorState = new();
-    public SpearPokeState pokeState = new();
+    public SpearNormalState normalState { get; private set; } = new();
+    public SpearAnchorState anchorState { get; private set; } = new();
+    public SpearPokeState pokeState { get; private set; } = new();
 
-    public float reachDistance {  get; set; }
-    public Vector2 spearPosition { get { return _playerRd.position; } }
-    public Vector2 anchorPoint { get; set; }
-    public Vector2 spearHead { get { return _spearHead.position; } }
+    public float ReachDistance {  get; set; }
+    public CharacterStateManager Player { get { return _player; } }
+    public Vector2 SpearPosition { get { return _player.GetComponent<Rigidbody2D>().position; } }
+    public bool Anchored { get; set; }
+    public Vector2 AnchorPoint { get; set; }
+    public Vector2 SpearHead { get { return _spearHead.position; } }
+    public Camera Cam { get { return cam; } }
+    public float PokeSpeed { get { return spearPokeSpeed; } }
+    public float PokeDistance { get { return spearPokeDistance; } }
+    public float SpinSpeed { get { return spearSpinSpeed; } }
+    public float ReadyToPokeTimer { get; set;}
 
     // Start is called before the first frame update
     void Start()

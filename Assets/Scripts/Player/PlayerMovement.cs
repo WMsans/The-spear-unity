@@ -5,11 +5,10 @@ using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] CharacterController2D controller;
+    [SerializeField] CharacterStateManager manager;
 
     float horizontalMove = 0f;
 
-    float maxHorizontalSpeed = 40f;
     bool jumpKeyDown = false;
     bool jumpKey = false;
     bool crouchKey = false; 
@@ -17,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        horizontalMove = Input.GetAxisRaw("Horizontal") * maxHorizontalSpeed;
+        horizontalMove = Input.GetAxisRaw("Horizontal");
 
 
         if (Input.GetButtonDown("Jump"))
@@ -40,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        controller.Move(horizontalMove * Time.fixedDeltaTime, crouchKey, jumpKeyDown, jumpKey);
+        manager.GetKeys(jumpKey, jumpKeyDown, horizontalMove, crouchKey);
         jumpKeyDown = false;
     }
 }
