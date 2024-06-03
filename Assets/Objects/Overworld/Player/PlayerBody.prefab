@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 3984507454129457573}
   m_Layer: 6
   m_Name: PlayerBody
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -258,7 +258,6 @@ MonoBehaviour:
   m_CrouchSpeed: 0.36
   m_MovementSmoothing: 0.05
   maxHorizontalSpeed: 40
-  maxSpinSpeed: 3
   m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2

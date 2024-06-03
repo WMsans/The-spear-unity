@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 public abstract class CharacterBaseState
 {
@@ -26,13 +27,12 @@ public class CharacterNormalState : CharacterBaseState
     float lowJumpMultiplier = 2.0f;
     float fallMultiplier = 2.5f;
 
-    bool bounced = false;
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
     private bool m_Grounded;            // Whether or not the player is grounded.
     const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
     private Rigidbody2D m_Rigidbody2D;
     private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-    private Vector3 m_Velocity = Vector3.zero;
+    private Vector2 m_Velocity = Vector2.zero;
     private int _coyoteTimer = 0;
     public int CoyoteTimer { get { return _coyoteTimer; } set {  _coyoteTimer = value; } }
 
@@ -94,6 +94,7 @@ public class CharacterNormalState : CharacterBaseState
             {
                 m_Grounded = true;
                 _coyoteTimer = m_CoyoteTime;
+                chara.Bounced = false;
                 if (!wasGrounded)
                     OnLandEvent.Invoke();
             }
@@ -149,10 +150,17 @@ public class CharacterNormalState : CharacterBaseState
             }
 
             // Move the character by finding the target velocity
-            Vector3 targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
-            // And then smoothing it out and applying it to the character
-            m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+            Vector3 targetVelocity = new();
+            if (chara.Bounced && !m_Grounded && Mathf.Sign(move) == Mathf.Sign(m_Rigidbody2D.velocity.x))
+            {
+                targetVelocity = new(Mathf.Min( Mathf.Max(Mathf.Abs( m_Rigidbody2D.velocity.x), Mathf.Abs( move*10f)), chara.MaxBouncedHorizontalSpeed) * Mathf.Sign(move), m_Rigidbody2D.velocity.y);
+            }
+            else
+                targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
             
+            // And then smoothing it out and applying it to the character
+            m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+
             // If the input is moving the player right and the player is facing left...
             if (move > 0 && !m_FacingRight)
             {
@@ -172,7 +180,7 @@ public class CharacterNormalState : CharacterBaseState
             m_Rigidbody2D.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         }
         // Fall faster after releasing jump key
-        else if (m_Rigidbody2D.velocity.y > 0 && !bounced && !jump)
+        else if (m_Rigidbody2D.velocity.y > 0 && !chara.Bounced && !jump)
         {
             m_Rigidbody2D.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }

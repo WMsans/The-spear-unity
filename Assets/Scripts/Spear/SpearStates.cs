@@ -1,4 +1,3 @@
-using System;
 using Unity.Loading;
 using UnityEngine;
 
@@ -96,34 +95,82 @@ public class SpearPokeState : SpearBaseState
     }
     public override void OnCollisionStay2DState(SpearStateManager spear, Collision2D collision)
     {
-        if(collision.gameObject.tag == "Ground")
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            bool _flag = false;
-            Collider2D _face; 
-            // Calculate the anchor point
-            for (var i = 0f; i < 1f; i += 0.01f)
+            if(collision.gameObject.tag == "Block")
             {
-                var _testPoint = spear.SpearPosition + (spear.SpearHead - spear.SpearPosition) * i;
-                if (collision.collider.bounds.Contains(new(_testPoint.x , _testPoint.y))) 
-                { 
-                    for(var j = 0; j < 4; j++)
+                bool _flag = false;
+                Collider2D _face;
+                // Calculate the anchor point
+                for (var i = 0f; i < 1f; i += 0.01f)
+                {
+                    var _testPoint = spear.SpearPosition + (spear.SpearHead - spear.SpearPosition) * i;
+                    if (collision.collider.bounds.Contains(new(_testPoint.x, _testPoint.y)))
                     {
-                        var _c = collision.gameObject.GetComponent<GroundCollisions>().Colliers[j];
-                        if (_c.bounds.Contains(new(_testPoint.x, _testPoint.y)))
+                        for (var j = 0; j < 4; j++)
                         {
-                            _flag = true;
-                            _face = _c;
-                            spear.AnchorPoint = _testPoint;
-                            _faceIndex = j;
-                            break;
+                            var _c = collision.gameObject.GetComponent<GroundCollisions>().Colliers[j];
+                            if (_c.bounds.Contains(new(_testPoint.x, _testPoint.y)))
+                            {
+                                _flag = true;
+                                _face = _c;
+                                spear.AnchorPoint = _testPoint;
+                                _faceIndex = j;
+                                break;
+                            }
                         }
+                        if (_flag) break;
                     }
-                    if (_flag) break; 
+                }
+
+                // Switch to the anchor state
+                if (_flag) spear.SwitchState(spear.anchorState);
+            }
+            else if(collision.gameObject.tag == "BouncyBlock")
+            {
+                bool _flag = false;
+                Collider2D _face = new();
+                int _faceIndex = -1;
+                Vector2 _anchorPoint = new(); 
+                // Calculate the anchor point
+                for (var i = 0f; i < 1f; i += 0.01f)
+                {
+                    var _testPoint = spear.SpearPosition + (spear.SpearHead - spear.SpearPosition) * i;
+                    if (collision.collider.bounds.Contains(new(_testPoint.x, _testPoint.y)))
+                    {
+                        for (var j = 0; j < 4; j++)
+                        {
+                            var _c = collision.gameObject.GetComponent<GroundCollisions>().Colliers[j];
+                            if (_c.bounds.Contains(new(_testPoint.x, _testPoint.y)))
+                            {
+                                _flag = true;
+                                _face = _c;
+                                _anchorPoint = _testPoint;
+                                _faceIndex = j;
+                                break;
+                            }
+                        }
+                        if (_flag) break;
+                    }
+                }
+                // Add a force to the player
+                if (_flag)
+                {
+                    var _playerRd = spear.Player.GetComponent<Rigidbody2D>();
+
+                    var _dir = _playerRd.position - _anchorPoint;
+                    var num2 = Mathf.Sqrt(_dir.sqrMagnitude);
+                    _dir = new Vector2(_dir.x / num2, Mathf.Max(0f, _dir.y / num2));
+
+                    _playerRd.velocity *= Vector2.right;
+                    
+                    _playerRd.AddForce(_dir * 600f);
+
+                    spear.Player.Bounced = true;
+                    spear.SwitchState(spear.normalState);
                 }
             }
-
-            // Switch to the anchor state
-            if(_flag ) spear.SwitchState(spear.anchorState); 
+            
         }
     }
 }
