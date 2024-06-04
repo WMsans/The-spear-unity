@@ -151,12 +151,14 @@ public class CharacterNormalState : CharacterBaseState
 
             // Move the character by finding the target velocity
             Vector3 targetVelocity = new();
-            if (chara.Bounced && !m_Grounded && Mathf.Sign(move) == Mathf.Sign(m_Rigidbody2D.velocity.x))
+            if (chara.Bounced && !m_Grounded && Mathf.Sign(move) == Mathf.Sign(m_Rigidbody2D.velocity.x) && Mathf.Abs(move) >= 0.001f)
             {
                 targetVelocity = new(Mathf.Min( Mathf.Max(Mathf.Abs( m_Rigidbody2D.velocity.x), Mathf.Abs( move*10f)), chara.MaxBouncedHorizontalSpeed) * Mathf.Sign(move), m_Rigidbody2D.velocity.y);
             }
             else
-                targetVelocity = new Vector2(move * 10f, m_Rigidbody2D.velocity.y);
+                targetVelocity = new(move * 10f, m_Rigidbody2D.velocity.y);
+            if (chara.MaxFallSpeed < 0)
+                targetVelocity.y = Mathf.Clamp(targetVelocity.y, chara.MaxFallSpeed, -chara.MaxFallSpeed);
             
             // And then smoothing it out and applying it to the character
             m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);

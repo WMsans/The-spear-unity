@@ -18,6 +18,7 @@ public class CharacterStateManager : MonoBehaviour
     [SerializeField] int m_CoyoteTime;                                  // Coyote time 
     [SerializeField] float lowJumpMultiplier = 2.0f;
     [SerializeField] float fallMultiplier = 2.5f;
+    [SerializeField] float maxFallSpeed;
     [SerializeField] SpearStateManager spear;
     
 
@@ -47,6 +48,7 @@ public class CharacterStateManager : MonoBehaviour
     public SpearStateManager Spear { get { return spear; } }
     public Rigidbody2D SpearRd { get { return spear.GetComponent<Rigidbody2D>(); } }
     public bool Bounced { get; set; }
+    public float MaxFallSpeed { get { return maxFallSpeed; } }
 
     // Start is called before the first frame update
     void Start()
