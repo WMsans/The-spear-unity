@@ -17,6 +17,6 @@ public class GroundCollisions : MonoBehaviour
 
     private void Awake()
     {
-        GetComponent<SpriteRenderer>().enabled = false;
+        //GetComponent<SpriteRenderer>().enabled = false;
     }
 }

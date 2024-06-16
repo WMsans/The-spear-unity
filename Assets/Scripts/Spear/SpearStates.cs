@@ -172,7 +172,7 @@ public class SpearPokeState : SpearBaseState
                         _playerRd.AddForce(_dir * 400f);
                         */
                         spear.Player.AllowMoveTimer = 10;
-                        _playerRd.velocity = new(15f * Mathf.Sign(_dir.x), _dir.y * 15f);
+                        _playerRd.velocity = new(25f * Mathf.Sign(_dir.x), _dir.y * 15f);
                     }else if(_faceIndex == 3)// Up face
                     {
                         /*
