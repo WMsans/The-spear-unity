@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterStateManager : MonoBehaviour
+public class CharacterStateManager : MonoBehaviour, IDataPersistence
 {
     [SerializeField] float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
     [Range(0f, 1f)][SerializeField] float m_CrouchSpeed = .36f;           // Amount of maxSpeed applied to crouching movement. 1 = 100%
     [Range(0, .3f)][SerializeField] float m_MovementSmoothing = .05f;   // How much to smooth out the movement
     [Range(0f, 50f)][SerializeField] float maxHorizontalSpeed;                  // The walk speed of the player
     [Range(0f, 100f)][SerializeField] float maxBouncedSpeed;
+    [SerializeField] float accel;
+    [SerializeField] float decel; 
     [SerializeField] bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
     [SerializeField] LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
     [SerializeField] Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
@@ -20,7 +22,8 @@ public class CharacterStateManager : MonoBehaviour
     [SerializeField] float fallMultiplier = 2.5f;
     [SerializeField] float maxFallSpeed;
     [SerializeField] SpearStateManager spear;
-    
+    //public static CharacterStateManager instance;
+
 
     CharacterBaseState currentState;
     public CharacterNormalState normalState = new();
@@ -32,6 +35,8 @@ public class CharacterStateManager : MonoBehaviour
     public bool keyCrouch { get; private set; }
     public float MaxHorizontalSpeed { get {return maxHorizontalSpeed; } }
     public float MaxBouncedHorizontalSpeed { get { return maxBouncedSpeed; } }
+    public float Accel {  get { return accel; } }
+    public float Decel { get { return decel; } }
     public float JumpForce { get { return m_JumpForce; } }
     public float CrouchSpeed { get { return m_CrouchSpeed; } }
     public float MovementSmoothing { get { return m_MovementSmoothing; } }
@@ -47,10 +52,24 @@ public class CharacterStateManager : MonoBehaviour
     public float FallMultiplier { get { return fallMultiplier; } }
     public SpearStateManager Spear { get { return spear; } }
     public Rigidbody2D SpearRd { get { return spear.GetComponent<Rigidbody2D>(); } }
-    public bool Bounced { get; set; }
+    public bool Bounced { get; set; } = false;
+    public int BoucedFace { get; set; } = -1;
+    public int AllowMoveTimer { get; set; } = 0;
     public float MaxFallSpeed { get { return maxFallSpeed; } }
-
-    // Start is called before the first frame update
+    /*
+    void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            Debug.LogError("Found more than one Player in the scene.");
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+    */
     void Start()
     {
         SwitchState(normalState);
@@ -74,5 +93,13 @@ public class CharacterStateManager : MonoBehaviour
         keyJumpDown = _keyjumpdown;
         keyHor = _keyhor;
         keyCrouch = _keycrouch;
+    }
+    public void LoadData(GameData gameData)
+    {
+        transform.position = gameData.playerPosition;
+    }
+    public void SaveData(ref GameData gameData)
+    {
+        gameData.playerPosition = transform.position;
     }
 }

@@ -1,4 +1,5 @@
 using Unity.Loading;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class SpearBaseState
@@ -162,15 +163,41 @@ public class SpearPokeState : SpearBaseState
                     var num2 = Mathf.Sqrt(_dir.sqrMagnitude);
                     _dir = new Vector2(_dir.x / num2, Mathf.Max(0f, _dir.y / num2));
 
-                    _playerRd.velocity *= Vector2.right;
+                    if(_faceIndex == 0 || _faceIndex == 2)// Left or Right face
+                    {
+                        /*
+                        spear.Player.AllowMoveTimer = 10;
+                        _playerRd.velocity *= Vector2.right;
+                        _dir.x = Mathf.Sign(_dir.x);
+                        _playerRd.AddForce(_dir * 400f);
+                        */
+                        spear.Player.AllowMoveTimer = 10;
+                        _playerRd.velocity = new(15f * Mathf.Sign(_dir.x), _dir.y * 15f);
+                    }else if(_faceIndex == 3)// Up face
+                    {
+                        /*
+                        _playerRd.velocity *= Vector2.right;
+                        _dir = Vector2.up;
+                        _playerRd.AddForce(_dir * 600f);
+                        */
+                        _playerRd.velocity = new(_playerRd.velocity.x, 15f);
+                    }
+                    else// Down face
+                    {
+                        _playerRd.velocity *= Vector2.right;
+                        _dir.x = 0f;
+                    }
+                    spear.Player.BoucedFace = _faceIndex;
                     
-                    _playerRd.AddForce(_dir * 600f);
 
                     spear.Player.Bounced = true;
                     spear.SwitchState(spear.normalState);
                 }
             }
-            
+            else if(collision.gameObject.tag == "BreakableBlock")
+            {
+                collision.gameObject.GetComponent<Goldblock>().BlockHP--;
+            }
         }
     }
 }

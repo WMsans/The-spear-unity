@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraFollower : MonoBehaviour
+public class CameraFollower : MonoBehaviour, IDataPersistence
 {
+    public static CameraFollower instance;
     [SerializeField] Transform follow;
     [SerializeField] Camera cam;
     [SerializeField] float followSpeed;
@@ -14,7 +15,16 @@ public class CameraFollower : MonoBehaviour
     public Vector2 MinPoint { get; set; } = Vector2.zero;
     public Vector2 MaxPoint { get; set; } = Vector2.zero;
     public CameraLimiter CameraLimiter { get; set; } = null;
-
+    void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            Debug.LogError("Found more than one Virtual Camera in the scene.");
+        }
+        else
+            instance = this;
+    }
     void Start()
     {
         _lastFollowPos = follow.position;
@@ -53,5 +63,14 @@ public class CameraFollower : MonoBehaviour
     {
         Vector2 pos = cam.transform.position;
         return pos + Extents(cam);
+    }
+    // Load and Save system
+    public void LoadData(GameData gameData)
+    {
+        transform.position = gameData.cameraPosition;
+    }
+    public void SaveData(ref GameData gameData)
+    {
+        gameData.cameraPosition = transform.position;
     }
 }

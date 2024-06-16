@@ -5,25 +5,31 @@ using UnityEngine;
 
 public class CameraLimiter : MonoBehaviour
 {
-    [SerializeField] CameraFollower cameraFollower;
+    [SerializeField] Collider2D collisionBound;
+    [SerializeField] Collider2D cameraBound;
 
-    Collider2D _col;
+    CameraFollower cameraFollower;
     bool _enabled = false;
     void Awake()
     {
-        _col = GetComponent<Collider2D>();
         _enabled = false;
+
+        GetComponent<SpriteRenderer>().enabled = false;
+    }
+    private void Start()
+    {
+        cameraFollower = CameraFollower.instance;
     }
     void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
             _enabled = true;
-            if (_col.bounds.Contains(collision.gameObject.transform.position)){
+            if (cameraBound.bounds.Contains(collision.gameObject.transform.position)){
                 cameraFollower.CameraLimiter = this;
                 //Make this the limiter
-                cameraFollower.MinPoint = _col.bounds.min;
-                cameraFollower.MaxPoint = _col.bounds.max;
+                cameraFollower.MinPoint = cameraBound.bounds.min;
+                cameraFollower.MaxPoint = cameraBound.bounds.max;
             }
             else
             {

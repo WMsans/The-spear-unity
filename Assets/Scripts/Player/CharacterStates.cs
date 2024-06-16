@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
@@ -17,6 +18,8 @@ public class CharacterNormalState : CharacterBaseState
     float m_CrouchSpeed = .36f;                        // Amount of maxSpeed applied to crouching movement. 1 = 100%
     float m_MovementSmoothing = .05f;                  // How much to smooth out the movement
     float maxHorizontalSpeed;                          // The walk speed of the player
+    float accelerationSpeed;
+    float decelerationSpeed;
     bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
     LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
     Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
@@ -26,6 +29,7 @@ public class CharacterNormalState : CharacterBaseState
     int m_CoyoteTime;                                  // Coyote time 
     float lowJumpMultiplier = 2.0f;
     float fallMultiplier = 2.5f;
+    float m_BouncedSpeed; 
 
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
     private bool m_Grounded;            // Whether or not the player is grounded.
@@ -52,7 +56,9 @@ public class CharacterNormalState : CharacterBaseState
         m_JumpForce = chara.JumpForce;                          
         m_CrouchSpeed = chara.CrouchSpeed;                      
         m_MovementSmoothing = chara.MovementSmoothing;          
-        maxHorizontalSpeed = chara.MaxHorizontalSpeed;            
+        maxHorizontalSpeed = chara.MaxHorizontalSpeed;
+        accelerationSpeed = chara.Accel;
+        decelerationSpeed = chara.Decel;
         m_AirControl = chara.AirControl;                        
         m_WhatIsGround = chara.WhatIsGround;                    
         m_GroundCheck = chara.GroundCheck;                      
@@ -62,6 +68,7 @@ public class CharacterNormalState : CharacterBaseState
         m_CoyoteTime = chara.CoyoteTime;                        
         lowJumpMultiplier = chara.LowJumpMultiplier;
         fallMultiplier = chara.FallMultiplier;
+        m_BouncedSpeed = chara.MaxBouncedHorizontalSpeed;
 
         m_Rigidbody2D = chara.GetComponent<Rigidbody2D>();
 
@@ -99,10 +106,10 @@ public class CharacterNormalState : CharacterBaseState
                     OnLandEvent.Invoke();
             }
         }
-        _coyoteTimer = Mathf.Max(_coyoteTimer - 1, 0); // debug
+        _coyoteTimer = Mathf.Max(_coyoteTimer - 1, 0);
         
-
-        Move(chara.keyHor * maxHorizontalSpeed * Time.fixedDeltaTime, chara.keyCrouch, chara.keyJumpDown, chara.keyJump, chara);
+        chara.AllowMoveTimer = m_Grounded ? 0 : Mathf.Max(chara.AllowMoveTimer - 1, 0); 
+        Move(chara.keyHor * Time.fixedDeltaTime, chara.keyCrouch, chara.keyJumpDown, chara.keyJump, chara);
     }
     private void Move(float move, bool crouch, bool jumpDown, bool jump, CharacterStateManager chara)
     {
@@ -148,21 +155,36 @@ public class CharacterNormalState : CharacterBaseState
                     OnCrouchEvent.Invoke(false);
                 }
             }
-
+            /* 
             // Move the character by finding the target velocity
-            Vector3 targetVelocity = new();
-            if (chara.Bounced && !m_Grounded && Mathf.Sign(move) == Mathf.Sign(m_Rigidbody2D.velocity.x) && Mathf.Abs(move) >= 0.001f)
+            Vector3 targetVelocity;
+            if (chara.Bounced && !m_Grounded && Mathf.Sign(move) == Mathf.Sign(m_Rigidbody2D.velocity.x) && Mathf.Abs(move) > 0.001f)
             {
-                targetVelocity = new(Mathf.Min( Mathf.Max(Mathf.Abs( m_Rigidbody2D.velocity.x), Mathf.Abs( move*10f)), chara.MaxBouncedHorizontalSpeed) * Mathf.Sign(move), m_Rigidbody2D.velocity.y);
+                targetVelocity = new(Mathf.Min( Mathf.Max(Mathf.Abs( m_Rigidbody2D.velocity.x), Mathf.Abs( move * maxHorizontalSpeed * 10f)), m_BouncedSpeed) * Mathf.Sign(move), m_Rigidbody2D.velocity.y);
+            }else if(chara.AllowMoveTimer > 0)
+            {
+                targetVelocity = new(Mathf.Clamp(m_Rigidbody2D.velocity.x, -m_BouncedSpeed, m_BouncedSpeed), m_Rigidbody2D.velocity.y);
+            }else
+            {
+                targetVelocity = new(move * maxHorizontalSpeed * 10f, m_Rigidbody2D.velocity.y);
             }
-            else
-                targetVelocity = new(move * 10f, m_Rigidbody2D.velocity.y);
+
             if (chara.MaxFallSpeed < 0)
-                targetVelocity.y = Mathf.Clamp(targetVelocity.y, chara.MaxFallSpeed, -chara.MaxFallSpeed);
+                targetVelocity.y = Mathf.Max(targetVelocity.y, chara.MaxFallSpeed);
             
             // And then smoothing it out and applying it to the character
             m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-
+            */
+            if ((Mathf.Abs(m_Rigidbody2D.velocity.x + _sign( move) * accelerationSpeed) <= maxHorizontalSpeed|| (_sign(move) != _sign(m_Rigidbody2D.velocity.x) && Mathf.Abs( move) > 0.001f) )&& chara.AllowMoveTimer <= 0)
+            {
+                m_Rigidbody2D.velocity += _sign(move) * accelerationSpeed * Vector2.right;
+            }
+            if (Mathf.Abs( move) <= 0.001f || (Mathf.Abs(m_Rigidbody2D.velocity.x) > m_BouncedSpeed && chara.Bounced) || (Mathf.Abs(m_Rigidbody2D.velocity.x) > maxHorizontalSpeed && !chara.Bounced)) 
+            {
+                if(Mathf.Abs( m_Rigidbody2D.velocity.x) <= Mathf.Abs(decelerationSpeed))m_Rigidbody2D.velocity *= Vector2.up;
+                else if (m_Rigidbody2D.velocity.x < 0) m_Rigidbody2D.velocity += decelerationSpeed * Vector2.right;
+                else m_Rigidbody2D.velocity -= decelerationSpeed * Vector2.right;
+            }
             // If the input is moving the player right and the player is facing left...
             if (move > 0 && !m_FacingRight)
             {
@@ -176,7 +198,7 @@ public class CharacterNormalState : CharacterBaseState
                 Flip(chara);
             }
         }
-        // Fall faster
+        // Fall faster when falling
         if (m_Rigidbody2D.velocity.y < 0)
         {
             m_Rigidbody2D.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
@@ -189,10 +211,14 @@ public class CharacterNormalState : CharacterBaseState
         // If the player should jump
         if ((m_Grounded || _coyoteTimer > 0) && jumpDown)
         {
+            
             // Add a vertical force to the player.
             m_Grounded = false;
-            if (m_Rigidbody2D.velocity.y < 0) m_Rigidbody2D.velocity *= Vector2.right;
+            m_Rigidbody2D.velocity *= Vector2.right;
             m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+            
+            //m_Grounded = false;
+            //m_Rigidbody2D.velocity = new(m_Rigidbody2D.velocity.x, m_JumpForce);
         }
     }
     private void Flip(CharacterStateManager chara)
@@ -204,6 +230,11 @@ public class CharacterNormalState : CharacterBaseState
         Vector3 theScale = chara.transform.localScale;
         theScale.x *= -1;
         chara.transform.localScale = theScale;
+    }
+    private float _sign(float a)
+    {
+        if(Mathf.Abs(a) <= 0.001f) return 0f;
+        return Mathf.Sign(a);
     }
 }
 
@@ -232,7 +263,7 @@ public class CharacterAnchorState : CharacterBaseState
         if (!chara.Spear.Anchored)
         {
             rd.gravityScale = _oriGrav;
-            rd.velocity = new Vector2(Mathf.Min(rd.velocity.x, m_Speed), 0f);
+            rd.velocity = new Vector2(Mathf.Min(Mathf.Abs( rd.velocity.x), m_Speed) * Mathf.Sign(rd.velocity.x), 0f);
             chara.normalState.CoyoteTimer = chara.CoyoteTime;
             chara.SwitchState(chara.normalState);
         }

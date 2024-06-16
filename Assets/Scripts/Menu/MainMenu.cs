@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
 {
     public void PlayGame()
     {
+        DataPersistenceManager.instance.LoadGame();
         SceneManager.LoadScene(1);
     }
 
