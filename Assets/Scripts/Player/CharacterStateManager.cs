@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterStateManager : MonoBehaviour, IDataPersistence
@@ -21,13 +22,18 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     [SerializeField] float lowJumpMultiplier = 2.0f;
     [SerializeField] float fallMultiplier = 2.5f;
     [SerializeField] float maxFallSpeed;
+    [SerializeField] float stiff;
+    [SerializeField] Camera m_Camera;
     [SerializeField] SpearStateManager spear;
-    //public static CharacterStateManager instance;
+    [SerializeField] GameObject m_SpearObject;
+    public static CharacterStateManager Instance { get; private set; }
 
 
     CharacterBaseState currentState;
     public CharacterNormalState normalState = new();
     public CharacterAnchorState anchorState = new();
+    public CharacterStiffState stiffState = new();
+
 
     public bool keyJump {  get; private set; }
     public bool keyJumpDown { get; private set; }
@@ -53,29 +59,39 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     public SpearStateManager Spear { get { return spear; } }
     public Rigidbody2D SpearRd { get { return spear.GetComponent<Rigidbody2D>(); } }
     public bool Bounced { get; set; } = false;
+    public bool Grounded { get; set; } = false;
+    public bool AbleToReset { get; set; } = true;
     public int BoucedFace { get; set; } = -1;
     public int AllowMoveTimer { get; set; } = 0;
     public float MaxFallSpeed { get { return maxFallSpeed; } }
-    /*
+    public Vector2 SavePosition { get; set; } = new();
+    public float Stiff { get { return stiff; } }
+
     void Awake()
     {
-        if (instance != null)
+        if (Instance != null)
         {
             Destroy(gameObject);
             Debug.LogError("Found more than one Player in the scene.");
         }
         else
         {
-            instance = this;
+            Instance = this;
         }
     }
-    */
+
     void Start()
     {
         SwitchState(normalState);
     }
     void Update()
     {
+        if(spear == null)
+        {
+            spear = Instantiate(m_SpearObject).GetComponent<SpearStateManager>();
+            spear.Player = this;
+            spear.Cam = m_Camera;
+        }
         currentState.UpdateState(this);
     }
     void FixedUpdate()
@@ -84,6 +100,8 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     }
     public void SwitchState(CharacterBaseState state)
     {
+        if(currentState !=  null)   
+            currentState.ExitState(this);
         currentState = state;
         currentState.EnterState(this);
     }
@@ -96,7 +114,8 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     }
     public void LoadData(GameData gameData)
     {
-        transform.position = gameData.playerPosition;
+        if(transform.position == new Vector3())
+            transform.position = gameData.playerPosition;
     }
     public void SaveData(ref GameData gameData)
     {

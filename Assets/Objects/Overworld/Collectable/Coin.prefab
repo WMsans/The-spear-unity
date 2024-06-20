@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1051819168665346434}
   - component: {fileID: 2356503024065346143}
   - component: {fileID: 1559364120743540960}
-  - component: {fileID: -7776108371509256459}
+  - component: {fileID: 3764780840030895029}
   - component: {fileID: 7156996549099466837}
   m_Layer: 11
   m_Name: Coin
@@ -150,7 +150,7 @@ CircleCollider2D:
   m_Offset: {x: -0.006510772, y: 0}
   serializedVersion: 2
   m_Radius: 0.07348923
---- !u!58 &-7776108371509256459
+--- !u!58 &3764780840030895029
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -184,7 +184,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 2
+  m_Radius: 1
 --- !u!114 &7156996549099466837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,3 +197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f13aadf88da571149a761b9ced62a91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attractorSpeed: 75
+  destroyTime: 7.5
+  Detecter: {fileID: 3764780840030895029}
+  Collider: {fileID: 1559364120743540960}

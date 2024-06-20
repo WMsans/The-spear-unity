@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Goldblock : MonoBehaviour, IDataPersistence
+public class Goldblock : BreakableBlock, IDataPersistence
 {
     [SerializeField] int blockHP = 1;
     [SerializeField] int coinNumber = 1;
@@ -14,7 +14,6 @@ public class Goldblock : MonoBehaviour, IDataPersistence
         id = System.Guid.NewGuid().ToString();
     }
 
-    public int BlockHP { get; set; }
     bool collected = false;
     private void Start()
     {
@@ -22,15 +21,12 @@ public class Goldblock : MonoBehaviour, IDataPersistence
     }
     private void Update()
     {
-        if(BlockHP <= 0)
+        if (BlockHP <= 0)
         {
-            collected = true;
             DestroyBlock();
         }
-        if (Input.GetKeyDown(KeyCode.Q))
-            CoinGenerate();
     }
-    void DestroyBlock()
+    public new void DestroyBlock()
     {
         // ±¬½ð±Ò
         CoinGenerate();
@@ -39,8 +35,7 @@ public class Goldblock : MonoBehaviour, IDataPersistence
     }
     public void LoadData(GameData gameData)
     {
-        
-            gameData.goldblockCollected.TryGetValue(id, out collected);
+        gameData.goldblockCollected.TryGetValue(id, out collected);
         if (collected)
         {
             Destroy(gameObject);

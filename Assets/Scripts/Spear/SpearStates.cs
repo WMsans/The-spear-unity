@@ -23,6 +23,7 @@ public class SpearNormalState : SpearBaseState
         cam = spear.Cam;
         rd = spear.GetComponent<Rigidbody2D>();
 
+        spear.AnchorBlock = null;
     }
     public override void UpdateState(SpearStateManager spear)
     {
@@ -98,7 +99,7 @@ public class SpearPokeState : SpearBaseState
     {
         if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            if(collision.gameObject.tag == "Block")
+            if (collision.gameObject.tag == "Block" || collision.gameObject.tag == "BreakableDirt")
             {
                 bool _flag = false;
                 Collider2D _face;
@@ -125,14 +126,20 @@ public class SpearPokeState : SpearBaseState
                 }
 
                 // Switch to the anchor state
-                if (_flag) spear.SwitchState(spear.anchorState);
+                if (_flag)
+                {
+                    collision.gameObject.GetComponent<GroundCollisions>().Anchored = true;
+                    spear.AnchorBlock = collision.gameObject;
+                    spear.SwitchState(spear.anchorState);
+                    
+                }
             }
-            else if(collision.gameObject.tag == "BouncyBlock")
+            else if (collision.gameObject.tag == "BouncyBlock")
             {
                 bool _flag = false;
                 Collider2D _face = new();
                 int _faceIndex = -1;
-                Vector2 _anchorPoint = new(); 
+                Vector2 _anchorPoint = new();
                 // Calculate the anchor point
                 for (var i = 0f; i < 1f; i += 0.01f)
                 {
@@ -142,6 +149,7 @@ public class SpearPokeState : SpearBaseState
                         for (var j = 0; j < 4; j++)
                         {
                             var _c = collision.gameObject.GetComponent<GroundCollisions>().Colliers[j];
+                            if (!_c.enabled) continue;
                             if (_c.bounds.Contains(new(_testPoint.x, _testPoint.y)))
                             {
                                 _flag = true;
@@ -163,7 +171,7 @@ public class SpearPokeState : SpearBaseState
                     var num2 = Mathf.Sqrt(_dir.sqrMagnitude);
                     _dir = new Vector2(_dir.x / num2, Mathf.Max(0f, _dir.y / num2));
 
-                    if(_faceIndex == 0 || _faceIndex == 2)// Left or Right face
+                    if (_faceIndex == 0 || _faceIndex == 2)// Left or Right face
                     {
                         /*
                         spear.Player.AllowMoveTimer = 10;
@@ -173,7 +181,8 @@ public class SpearPokeState : SpearBaseState
                         */
                         spear.Player.AllowMoveTimer = 10;
                         _playerRd.velocity = new(25f * Mathf.Sign(_dir.x), _dir.y * 15f);
-                    }else if(_faceIndex == 3)// Up face
+                    }
+                    else if (_faceIndex == 3)// Up face
                     {
                         /*
                         _playerRd.velocity *= Vector2.right;
@@ -188,15 +197,15 @@ public class SpearPokeState : SpearBaseState
                         _dir.x = 0f;
                     }
                     spear.Player.BoucedFace = _faceIndex;
-                    
+
 
                     spear.Player.Bounced = true;
                     spear.SwitchState(spear.normalState);
                 }
             }
-            else if(collision.gameObject.tag == "BreakableBlock")
+            else if (collision.gameObject.tag == "BreakableBlock")
             {
-                collision.gameObject.GetComponent<Goldblock>().BlockHP--;
+                collision.gameObject.GetComponent<Goldblock>().DamageBlock();
             }
         }
     }
@@ -225,11 +234,16 @@ public class SpearAnchorState : SpearBaseState
         if (!Input.GetButton("Fire1"))
         {
             spear.Anchored = false;
+            spear.AnchorBlock.GetComponent<GroundCollisions>().Anchored = false;
+            
             spear.SwitchState(spear.normalState);
+            
         }
         else if (!spear.Anchored)
         {
+            spear.AnchorBlock.GetComponent<GroundCollisions>().Anchored = false;
             spear.SwitchState(spear.normalState);
+            
         }
     }
     public override void FixedUpdateState(SpearStateManager spear)

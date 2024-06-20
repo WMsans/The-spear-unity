@@ -5,15 +5,21 @@ using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] CharacterStateManager manager;
+    CharacterStateManager manager;
 
     float horizontalMove = 0f;
 
     bool jumpKeyDown = false;
     bool jumpKey = false;
-    bool crouchKey = false; 
-
-    // Update is called once per frame
+    bool crouchKey = false;
+    void Awake()
+    {
+        manager = GetComponent<CharacterStateManager>();
+        if(manager == null)
+        {
+            Debug.LogError("Player doesn't have a manager");
+        }
+    }
     void Update()
     {
         horizontalMove = Input.GetAxisRaw("Horizontal");

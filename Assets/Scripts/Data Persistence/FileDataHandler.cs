@@ -30,7 +30,7 @@ public class FileDataHandler
             {
                 dataToStore = EncryptDecrypt(dataToStore);
             }
-            //write the file to the file system
+            // Write the file to the file system
             using (FileStream stream = new(fullPath, FileMode.Create))
             {
                 using (StreamWriter writer = new(stream))

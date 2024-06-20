@@ -8,6 +8,7 @@ TagManager:
   - Block
   - BouncyBlock
   - BreakableBlock
+  - LevelBlock
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Ground
   - CameraLimit
   - Collectable
-  - 
+  - Breakables
   - 
   - 
   - 

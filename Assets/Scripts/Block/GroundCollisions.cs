@@ -14,6 +14,7 @@ public class GroundCollisions : MonoBehaviour
     public Collider2D Left { get { return left; } }
     public Collider2D Right { get { return right; } }
     public Collider2D[] Colliers {  get { return new Collider2D[] { right, down, left, up }; } }
+    public bool Anchored { get; set; } = false;
 
     private void Awake()
     {

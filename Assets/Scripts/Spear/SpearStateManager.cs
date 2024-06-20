@@ -16,27 +16,25 @@ public class SpearStateManager : MonoBehaviour
     public SpearNormalState normalState { get; private set; } = new();
     public SpearAnchorState anchorState { get; private set; } = new();
     public SpearPokeState pokeState { get; private set; } = new();
-
     public float ReachDistance {  get; set; }
-    public CharacterStateManager Player { get { return _player; } }
+    public CharacterStateManager Player { get { return _player; } set { _player = value; } }
     public Vector2 SpearPosition { get { return _player.GetComponent<Rigidbody2D>().position; } }
     public bool Anchored { get; set; }
     public Vector2 AnchorPoint { get; set; }
+    public GameObject AnchorBlock { get; set; }
     public Vector2 SpearHead { get { return _spearHead.position; } }
-    public Camera Cam { get { return cam; } }
+    public Camera Cam { get { return cam; } set { cam = value; } }
     public float PokeSpeed { get { return spearPokeSpeed; } }
     public float PokeDistance { get { return spearPokeDistance; } }
     public float SpinSpeed { get { return spearSpinSpeed; } }
     public float ReadyToPokeTimer { get; set;}
 
-    // Start is called before the first frame update
     void Start()
     {
         currentState = normalState;
 
         currentState.EnterState(this);
     }
-
     void Update()
     {
         currentState.UpdateState(this);

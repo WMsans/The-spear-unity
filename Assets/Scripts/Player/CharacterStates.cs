@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,6 +11,7 @@ public abstract class CharacterBaseState
     public abstract void EnterState(CharacterStateManager chara);
     public abstract void UpdateState(CharacterStateManager chara);
     public abstract void FixedUpdateState(CharacterStateManager chara);
+    public abstract void ExitState(CharacterStateManager chara);
 }
 
 public class CharacterNormalState : CharacterBaseState
@@ -69,6 +71,7 @@ public class CharacterNormalState : CharacterBaseState
         lowJumpMultiplier = chara.LowJumpMultiplier;
         fallMultiplier = chara.FallMultiplier;
         m_BouncedSpeed = chara.MaxBouncedHorizontalSpeed;
+        m_Grounded = chara.Grounded;
 
         m_Rigidbody2D = chara.GetComponent<Rigidbody2D>();
 
@@ -81,6 +84,7 @@ public class CharacterNormalState : CharacterBaseState
     }
     public override void UpdateState(CharacterStateManager chara)
     {
+        
         if (chara.Spear.Anchored)
         {
             chara.SwitchState(chara.anchorState);
@@ -91,15 +95,34 @@ public class CharacterNormalState : CharacterBaseState
     {
         bool wasGrounded = m_Grounded;
         m_Grounded = false;
+        chara.Grounded = m_Grounded;
+        chara.AbleToReset = false;
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
         Collider2D[] colliders = Physics2D.OverlapCircleAll(new Vector2(m_GroundCheck.position.x, m_GroundCheck.position.y - m_GroundBuff), k_GroundedRadius, m_WhatIsGround);
         for (int i = 0; i < colliders.Length; i++)
         {
-            if (colliders[i].gameObject != chara.gameObject)
+            /*if (colliders[i].CompareTag("LevelBlock"))
+            {
+                if (!colliders[i].GetComponent<BreakableGround>().destroyed)
+                {
+                    m_Grounded = true;
+                    chara.Grounded = m_Grounded;
+                    chara.AbleToReset = false;
+                    _coyoteTimer = m_CoyoteTime;
+                    chara.Bounced = false;
+                    if (!wasGrounded)
+                        OnLandEvent.Invoke();
+                }
+                if(chara.AbleToReset)
+                Debug.Log(chara.AbleToReset);
+            }
+            else */if (colliders[i].isActiveAndEnabled && colliders[i].gameObject != chara.gameObject)
             {
                 m_Grounded = true;
+                chara.Grounded = m_Grounded;
+                chara.AbleToReset = true;
                 _coyoteTimer = m_CoyoteTime;
                 chara.Bounced = false;
                 if (!wasGrounded)
@@ -110,6 +133,10 @@ public class CharacterNormalState : CharacterBaseState
         
         chara.AllowMoveTimer = m_Grounded ? 0 : Mathf.Max(chara.AllowMoveTimer - 1, 0); 
         Move(chara.keyHor * Time.fixedDeltaTime, chara.keyCrouch, chara.keyJumpDown, chara.keyJump, chara);
+    }
+    public override void ExitState(CharacterStateManager chara)
+    {
+        
     }
     private void Move(float move, bool crouch, bool jumpDown, bool jump, CharacterStateManager chara)
     {
@@ -260,11 +287,10 @@ public class CharacterAnchorState : CharacterBaseState
     }
     public override void UpdateState(CharacterStateManager chara)
     {
+        chara.Grounded = false;
+        chara.AbleToReset = false;
         if (!chara.Spear.Anchored)
         {
-            rd.gravityScale = _oriGrav;
-            rd.velocity = new Vector2(Mathf.Min(Mathf.Abs( rd.velocity.x), m_Speed) * Mathf.Sign(rd.velocity.x), 0f);
-            chara.normalState.CoyoteTimer = chara.CoyoteTime;
             chara.SwitchState(chara.normalState);
         }
     }
@@ -283,4 +309,82 @@ public class CharacterAnchorState : CharacterBaseState
             chara.SwitchState(chara.normalState);
         }
     }
+    public override void ExitState(CharacterStateManager chara)
+    {
+        rd.gravityScale = _oriGrav;
+        rd.velocity = new Vector2(Mathf.Min(Mathf.Abs(rd.velocity.x), m_Speed) * Mathf.Sign(rd.velocity.x), 0f);
+        chara.normalState.CoyoteTimer = chara.CoyoteTime;
+    }
 }
+public class CharacterStiffState : CharacterBaseState
+{
+    Vector2 savePos;
+    Rigidbody2D rd;
+    float backTime = 1f;
+    int backTimer = 0;
+    /*public IEnumerator BackToNormalState(CharacterStateManager chara)
+    {
+        yield return new WaitForSeconds(1f);
+        chara.SwitchState(chara.normalState);
+    }*/
+    public override void EnterState(CharacterStateManager chara)
+    {
+        savePos = chara.SavePosition;
+        rd = chara.GetComponent<Rigidbody2D>();
+        backTimer = 0;
+        backTime = chara.Stiff;
+
+        rd.position = savePos;
+        chara.Spear.Anchored = false;
+        chara.Grounded = true;
+        chara.AbleToReset = true;
+        //CoroutineManager.Instance.StartManagedCoroutine(BackToNormalState(chara));
+    }
+    public override void UpdateState(CharacterStateManager chara)
+    {
+        
+    }
+    public override void FixedUpdateState(CharacterStateManager chara)
+    {
+        backTimer++;
+        if (backTimer > backTime * 50f)
+        {
+            chara.SwitchState(chara.normalState);
+        }
+    }
+    public override void ExitState(CharacterStateManager chara)
+    {
+        
+    }
+    /*public class CoroutineManager : MonoBehaviour
+    {
+        // 单例模式
+        public static CoroutineManager Instance { get; private set; }
+
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        // 开始协程的方法
+        public Coroutine StartManagedCoroutine(IEnumerator coroutine)
+        {
+            return StartCoroutine(coroutine);
+        }
+
+        // 停止协程的方法
+        public void StopManagedCoroutine(Coroutine coroutine)
+        {
+            StopCoroutine(coroutine);
+        }
+    }*/
+}
+

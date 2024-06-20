@@ -13,7 +13,7 @@ public class FlyingEnemyAI : MonoBehaviour
 
     Path path;
     int currentWaypoint = 0;
-    bool reachedEndOfPath = false;
+    //bool reachedEndOfPath = false;
 
     Seeker seeker;
     Rigidbody2D rd; 
@@ -45,12 +45,12 @@ public class FlyingEnemyAI : MonoBehaviour
         if(path == null) return;
         if (currentWaypoint >= path.vectorPath.Count)
         {
-            reachedEndOfPath=true;
+            //reachedEndOfPath=true;
             return;
         }
         else
         {
-            reachedEndOfPath = false;
+            //reachedEndOfPath = false;
         }
         
         var dir = ((Vector2)path.vectorPath[currentWaypoint] - rd.position).normalized;
@@ -63,6 +63,15 @@ public class FlyingEnemyAI : MonoBehaviour
         if(distance < nextWaypointDistance)
         {
             currentWaypoint++;
+        }
+
+        // Animation
+        if(force.x < 0f)
+        {
+            transform.localScale = new(-1, 1, 1);  
+        }else if(force.x > 0f)
+        {
+            transform.localScale = new(1, 1, 1);
         }
     }
 }
