@@ -23,7 +23,11 @@ public class CameraFollower : MonoBehaviour, IDataPersistence
             Debug.LogError("Found more than one Virtual Camera in the scene.");
         }
         else
+        {
             instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+            
     }
     void Start()
     {

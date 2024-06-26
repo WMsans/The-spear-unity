@@ -8,7 +8,7 @@ public class BreakableGround : MonoBehaviour
     [SerializeField] GameObject ground;
     public bool destroyed = false;
     bool readyToDestroy = false;
-    
+    bool readyToGenerate = true;
 
     void GenerateBlock()
     {
@@ -29,7 +29,7 @@ public class BreakableGround : MonoBehaviour
     }
     void Update()
     {
-        if (CharacterStateManager.Instance.AbleToReset)
+        if (CharacterStateManager.Instance.AbleToReset && readyToGenerate)
         {
             GenerateBlock();
             readyToDestroy = false;
@@ -40,6 +40,20 @@ public class BreakableGround : MonoBehaviour
         }else if (readyToDestroy)
         {
             DestroyBlock();
+        }
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            readyToGenerate = false;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            readyToGenerate = true;
         }
     }
 }

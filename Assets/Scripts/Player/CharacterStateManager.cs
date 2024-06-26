@@ -16,6 +16,8 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     [SerializeField] LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
     [SerializeField] Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
     [SerializeField] Transform m_CeilingCheck;                          // A position marking where to check for ceilings
+    [SerializeField] Transform m_LeftCheck;
+    [SerializeField] Transform m_RightCheck;
     [SerializeField] Collider2D m_CrouchDisableCollider;                // A collider that will be disabled when crouching
     [SerializeField] float m_GroundBuff;                                // Distance above ground is alloed to jump
     [SerializeField] int m_CoyoteTime;                                  // Coyote time 
@@ -29,7 +31,7 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     public static CharacterStateManager Instance { get; private set; }
 
 
-    CharacterBaseState currentState;
+    public CharacterBaseState currentState;
     public CharacterNormalState normalState = new();
     public CharacterAnchorState anchorState = new();
     public CharacterStiffState stiffState = new();
@@ -51,6 +53,8 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     public LayerMask WhatIsGround { get { return m_WhatIsGround; } }
     public Transform GroundCheck { get { return m_GroundCheck; } }
     public Transform CeilingCheck { get { return m_CeilingCheck; } }
+    public Transform LeftCheck {  get { return m_LeftCheck; } }
+    public Transform RightCheck { get { return m_RightCheck; } }
     public Collider2D CrouchDisableCollider { get { return m_CrouchDisableCollider; } }
     public float GroundBuff { get { return m_GroundBuff; } }
     public int CoyoteTime { get { return m_CoyoteTime; } }
@@ -66,6 +70,7 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     public float MaxFallSpeed { get { return maxFallSpeed; } }
     public Vector2 SavePosition { get; set; } = new();
     public float Stiff { get { return stiff; } }
+    public bool IsCrouched { get; set; } = false;
 
     void Awake()
     {

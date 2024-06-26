@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Goldblock : BreakableBlock, IDataPersistence
 {
-    [SerializeField] int blockHP = 1;
     [SerializeField] int coinNumber = 1;
     [SerializeField] string id;
     [SerializeField] GameObject coinPrefab;
@@ -15,10 +14,6 @@ public class Goldblock : BreakableBlock, IDataPersistence
     }
 
     bool collected = false;
-    private void Start()
-    {
-        BlockHP = blockHP;
-    }
     private void Update()
     {
         if (BlockHP <= 0)
@@ -28,6 +23,7 @@ public class Goldblock : BreakableBlock, IDataPersistence
     }
     public new void DestroyBlock()
     {
+        collected = true;
         // ±¬½ð±Ò
         CoinGenerate();
         // Destroy game object

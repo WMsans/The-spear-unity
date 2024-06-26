@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: BreakableDirtRuleTile
   m_EditorClassIdentifier: 
   m_DefaultSprite: {fileID: 37422636, guid: 318469735434f4a4aaf4a1781138954b, type: 3}
-  m_DefaultGameObject: {fileID: 1448032021268024146, guid: 589930c0f949176428a7f0cf564e53f8, type: 3}
+  m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
   - m_Id: 0
     m_Sprites:
     - {fileID: 37422636, guid: 318469735434f4a4aaf4a1781138954b, type: 3}
-    m_GameObject: {fileID: 1448032021268024146, guid: 589930c0f949176428a7f0cf564e53f8, type: 3}
+    m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
     m_PerlinScale: 0.5

@@ -10,12 +10,14 @@ public class SpearStateManager : MonoBehaviour
     [SerializeField] Camera cam;
     [Range(0f, 1f)][SerializeField] float spearPokeSpeed;
     [Range(0f, 5f)][SerializeField] float spearPokeDistance;
-    [Range(0f, 5f)][SerializeField] float spearSpinSpeed; 
+    [Range(0f, 5f)][SerializeField] float spearSpinSpeed;
+    [SerializeField] float spearPokeCoolDown;
 
-    SpearBaseState currentState;
+    public SpearBaseState currentState { get; private set; }
     public SpearNormalState normalState { get; private set; } = new();
     public SpearAnchorState anchorState { get; private set; } = new();
     public SpearPokeState pokeState { get; private set; } = new();
+    public SpearStiffState stiffState { get; private set; } = new();
     public float ReachDistance {  get; set; }
     public CharacterStateManager Player { get { return _player; } set { _player = value; } }
     public Vector2 SpearPosition { get { return _player.GetComponent<Rigidbody2D>().position; } }
@@ -28,6 +30,7 @@ public class SpearStateManager : MonoBehaviour
     public float PokeDistance { get { return spearPokeDistance; } }
     public float SpinSpeed { get { return spearSpinSpeed; } }
     public float ReadyToPokeTimer { get; set;}
+    public float ReadyToPokeTime { get { return spearPokeCoolDown; } }
 
     void Start()
     {

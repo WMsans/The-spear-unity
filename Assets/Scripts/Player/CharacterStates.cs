@@ -26,6 +26,8 @@ public class CharacterNormalState : CharacterBaseState
     LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
     Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
     Transform m_CeilingCheck;                          // A position marking where to check for ceilings
+    Transform m_LeftCheck;
+    Transform m_RightCheck;
     Collider2D m_CrouchDisableCollider;                // A collider that will be disabled when crouching
     float m_GroundBuff;                                // Distance above ground is alloed to jump
     int m_CoyoteTime;                                  // Coyote time 
@@ -64,7 +66,9 @@ public class CharacterNormalState : CharacterBaseState
         m_AirControl = chara.AirControl;                        
         m_WhatIsGround = chara.WhatIsGround;                    
         m_GroundCheck = chara.GroundCheck;                      
-        m_CeilingCheck = chara.CeilingCheck;                    
+        m_CeilingCheck = chara.CeilingCheck;
+        m_LeftCheck = chara.LeftCheck;
+        m_RightCheck = chara.RightCheck;
         m_CrouchDisableCollider = chara.CrouchDisableCollider;  
         m_GroundBuff = chara.GroundBuff;                        
         m_CoyoteTime = chara.CoyoteTime;                        
@@ -103,32 +107,34 @@ public class CharacterNormalState : CharacterBaseState
         Collider2D[] colliders = Physics2D.OverlapCircleAll(new Vector2(m_GroundCheck.position.x, m_GroundCheck.position.y - m_GroundBuff), k_GroundedRadius, m_WhatIsGround);
         for (int i = 0; i < colliders.Length; i++)
         {
-            /*if (colliders[i].CompareTag("LevelBlock"))
-            {
-                if (!colliders[i].GetComponent<BreakableGround>().destroyed)
-                {
-                    m_Grounded = true;
-                    chara.Grounded = m_Grounded;
-                    chara.AbleToReset = false;
-                    _coyoteTimer = m_CoyoteTime;
-                    chara.Bounced = false;
-                    if (!wasGrounded)
-                        OnLandEvent.Invoke();
-                }
-                if(chara.AbleToReset)
-                Debug.Log(chara.AbleToReset);
-            }
-            else */if (colliders[i].isActiveAndEnabled && colliders[i].gameObject != chara.gameObject)
+            if (colliders[i].isActiveAndEnabled && colliders[i].gameObject != chara.gameObject)
             {
                 m_Grounded = true;
                 chara.Grounded = m_Grounded;
-                chara.AbleToReset = true;
                 _coyoteTimer = m_CoyoteTime;
                 chara.Bounced = false;
                 if (!wasGrounded)
                     OnLandEvent.Invoke();
             }
         }
+        // Check if player is standing on a safe zone
+        if (m_Grounded)
+        {
+            foreach(Collider2D c in colliders)
+            {
+                if (!c.CompareTag("LevelBlock"))
+                    chara.AbleToReset = true;
+            }
+            chara.AbleToReset &= Physics2D.OverlapCircle(m_LeftCheck.position, k_GroundedRadius, m_WhatIsGround);
+            chara.AbleToReset &= Physics2D.OverlapCircle(m_RightCheck.position, k_GroundedRadius, m_WhatIsGround);
+        }
+        // If it is safe, save the postion
+        if (chara.AbleToReset)
+        {
+            chara.SavePosition = m_Rigidbody2D.position;
+        }
+            
+
         _coyoteTimer = Mathf.Max(_coyoteTimer - 1, 0);
         
         chara.AllowMoveTimer = m_Grounded ? 0 : Mathf.Max(chara.AllowMoveTimer - 1, 0); 
@@ -144,9 +150,14 @@ public class CharacterNormalState : CharacterBaseState
         if (!crouch && m_Grounded)
         {
             // If the character has a ceiling preventing them from standing up, keep them crouching
-            if (Physics2D.OverlapCircle(m_CeilingCheck.position, k_CeilingRadius, m_WhatIsGround))
+            Collider2D[] ceilings = Physics2D.OverlapCircleAll(m_CeilingCheck.position, k_CeilingRadius, m_WhatIsGround);
+            foreach(Collider2D c in ceilings)
             {
-                crouch = true;
+                if (c.isActiveAndEnabled && !c.isTrigger && c.gameObject != chara.gameObject)
+                {
+                    crouch = true;
+                    break;
+                }
             }
         }
 
@@ -162,9 +173,6 @@ public class CharacterNormalState : CharacterBaseState
                     m_wasCrouching = true;
                     OnCrouchEvent.Invoke(true);
                 }
-
-                // Reduce the speed by the crouchSpeed multiplier
-                move *= m_CrouchSpeed;
 
                 // Disable one of the colliders when crouching
                 if (m_CrouchDisableCollider != null)
@@ -182,6 +190,7 @@ public class CharacterNormalState : CharacterBaseState
                     OnCrouchEvent.Invoke(false);
                 }
             }
+            chara.IsCrouched = crouch;
             /* 
             // Move the character by finding the target velocity
             Vector3 targetVelocity;
@@ -202,11 +211,16 @@ public class CharacterNormalState : CharacterBaseState
             // And then smoothing it out and applying it to the character
             m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
             */
-            if ((Mathf.Abs(m_Rigidbody2D.velocity.x + _sign( move) * accelerationSpeed) <= maxHorizontalSpeed|| (_sign(move) != _sign(m_Rigidbody2D.velocity.x) && Mathf.Abs( move) > 0.001f) )&& chara.AllowMoveTimer <= 0)
+
+            // Reduce the speed by the crouchSpeed multiplier
+            var _crouchingHorSpeed = maxHorizontalSpeed;
+            if(m_wasCrouching)
+                _crouchingHorSpeed *= m_CrouchSpeed;
+            if ((Mathf.Abs(m_Rigidbody2D.velocity.x + _sign( move) * accelerationSpeed) <= _crouchingHorSpeed || (_sign(move) != _sign(m_Rigidbody2D.velocity.x) && Mathf.Abs( move) > 0.001f) )&& chara.AllowMoveTimer <= 0)
             {
                 m_Rigidbody2D.velocity += _sign(move) * accelerationSpeed * Vector2.right;
             }
-            if (Mathf.Abs( move) <= 0.001f || (Mathf.Abs(m_Rigidbody2D.velocity.x) > m_BouncedSpeed && chara.Bounced) || (Mathf.Abs(m_Rigidbody2D.velocity.x) > maxHorizontalSpeed && !chara.Bounced)) 
+            if (Mathf.Abs( move) <= 0.001f || (Mathf.Abs(m_Rigidbody2D.velocity.x) > m_BouncedSpeed && chara.Bounced) || (Mathf.Abs(m_Rigidbody2D.velocity.x) > _crouchingHorSpeed && !chara.Bounced)) 
             {
                 if(Mathf.Abs( m_Rigidbody2D.velocity.x) <= Mathf.Abs(decelerationSpeed))m_Rigidbody2D.velocity *= Vector2.up;
                 else if (m_Rigidbody2D.velocity.x < 0) m_Rigidbody2D.velocity += decelerationSpeed * Vector2.right;
@@ -284,6 +298,8 @@ public class CharacterAnchorState : CharacterBaseState
         rd.gravityScale = 0f;
 
         m_Speed = chara.MaxHorizontalSpeed;
+
+        chara.IsCrouched = false;
     }
     public override void UpdateState(CharacterStateManager chara)
     {
@@ -338,6 +354,12 @@ public class CharacterStiffState : CharacterBaseState
         chara.Spear.Anchored = false;
         chara.Grounded = true;
         chara.AbleToReset = true;
+
+        chara.Spear.SwitchState(chara.Spear.stiffState);
+
+        rd.velocity = Vector2.zero;
+
+        chara.IsCrouched = false;
         //CoroutineManager.Instance.StartManagedCoroutine(BackToNormalState(chara));
     }
     public override void UpdateState(CharacterStateManager chara)
@@ -354,7 +376,7 @@ public class CharacterStiffState : CharacterBaseState
     }
     public override void ExitState(CharacterStateManager chara)
     {
-        
+        chara.Spear.SwitchState(chara.Spear.normalState);
     }
     /*public class CoroutineManager : MonoBehaviour
     {
