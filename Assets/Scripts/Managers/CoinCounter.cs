@@ -21,7 +21,7 @@ public class CoinCounter : MonoBehaviour, IDataPersistence
     }
     void Update()
     {
-        coinCountText.text = coinCount.ToString();
+        coinCountText.text = "Coin: " + coinCount.ToString();
     }
     public void LoadData(GameData gameData)
     {

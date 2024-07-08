@@ -220,6 +220,10 @@ public class CharacterNormalState : CharacterBaseState
             {
                 m_Rigidbody2D.velocity += _sign(move) * accelerationSpeed * Vector2.right;
             }
+            else if((Mathf.Abs(m_Rigidbody2D.velocity.x + _sign(move) * accelerationSpeed) > _crouchingHorSpeed || Mathf.Abs(m_Rigidbody2D.velocity.x) < _crouchingHorSpeed) && chara.AllowMoveTimer <= 0)
+            {
+                m_Rigidbody2D.velocity = new(_sign(move) * _crouchingHorSpeed, m_Rigidbody2D.velocity.y);
+            }
             if (Mathf.Abs( move) <= 0.001f || (Mathf.Abs(m_Rigidbody2D.velocity.x) > m_BouncedSpeed && chara.Bounced) || (Mathf.Abs(m_Rigidbody2D.velocity.x) > _crouchingHorSpeed && !chara.Bounced)) 
             {
                 if(Mathf.Abs( m_Rigidbody2D.velocity.x) <= Mathf.Abs(decelerationSpeed))m_Rigidbody2D.velocity *= Vector2.up;

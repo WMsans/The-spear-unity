@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -25,6 +26,7 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     [SerializeField] float fallMultiplier = 2.5f;
     [SerializeField] float maxFallSpeed;
     [SerializeField] float stiff;
+    [SerializeField] float invincible;
     [SerializeField] Camera m_Camera;
     [SerializeField] SpearStateManager spear;
     [SerializeField] GameObject m_SpearObject;
@@ -70,8 +72,9 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     public float MaxFallSpeed { get { return maxFallSpeed; } }
     public Vector2 SavePosition { get; set; } = new();
     public float Stiff { get { return stiff; } }
+    public float Invincible {  get { return invincible; } }
+    public float InvincibleTimer { get; set; }
     public bool IsCrouched { get; set; } = false;
-
     void Awake()
     {
         if (Instance != null)
@@ -117,10 +120,38 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
         keyHor = _keyhor;
         keyCrouch = _keycrouch;
     }
+    public void Hurt(float damage, Vector2 enemyPos)
+    {
+        if(InvincibleTimer <= 0)
+        {
+            HPCounter.instance.HP -= damage;
+            if (HPCounter.instance.HP <= 0) Die();
+
+            StartCoroutine(FlashAfterHurt());
+        }
+    }
+    private IEnumerator FlashAfterHurt()
+    {
+        var flashDelay = 0.0833f;
+        var sprite = GetComponent<SpriteRenderer>();
+        for (InvincibleTimer = Invincible; InvincibleTimer > 0f; InvincibleTimer--)
+        {
+            sprite.enabled = false;
+            yield return new WaitForSeconds(flashDelay);
+            sprite.enabled = true;
+            yield return new WaitForSeconds(flashDelay);
+        }
+    }
+    public void Die()
+    {
+        Debug.Log("Player Died");
+        if(Debuger.instance.DebugMode) HPCounter.instance.HP = HPCounter.instance.maxHP;
+    }
     public void LoadData(GameData gameData)
     {
         if(transform.position == new Vector3())
             transform.position = gameData.playerPosition;
+
     }
     public void SaveData(ref GameData gameData)
     {

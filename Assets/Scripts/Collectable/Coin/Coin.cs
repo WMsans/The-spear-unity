@@ -18,9 +18,12 @@ public class Coin : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        Destroy(gameObject, destroyTime);
-
+        
         Physics2D.IgnoreLayerCollision(11, 11);
+    }
+    private void Start()
+    {
+        Destroy(gameObject, destroyTime);
     }
     private void FixedUpdate()
     {
@@ -44,6 +47,7 @@ public class Coin : MonoBehaviour
         {
             attracted = true;
             Collider.enabled = false;
+            rb.velocity = Vector2.zero;
             playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
         }
     }

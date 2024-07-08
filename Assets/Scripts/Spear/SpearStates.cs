@@ -200,7 +200,20 @@ public class SpearPokeState : SpearBaseState
                 spear.SwitchState(spear.normalState);
                 return true;
             }
-            return false;
+        }else if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            if (collision.gameObject.CompareTag("Enemy"))
+            {
+                collision.GetComponent<ParEnemy>().Hurt(HPCounter.instance.Attack, anchorPoint);
+                spear.ReadyToPokeTimer = spear.ReadyToPokeTime;
+
+                var _playerRd = spear.Player.GetComponent<Rigidbody2D>();
+                _playerRd.velocity *= Vector2.right;
+                _playerRd.AddForce(new(500f * (_playerRd.position - (Vector2)collision.transform.position).normalized.x, 500f));
+
+                spear.SwitchState(spear.normalState);
+                return true;
+            }
         }
         return false;
     }

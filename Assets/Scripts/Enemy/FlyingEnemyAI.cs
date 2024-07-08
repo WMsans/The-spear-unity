@@ -4,8 +4,10 @@ using UnityEngine;
 using Pathfinding;
 using Unity.VisualScripting;
 
-public class FlyingEnemyAI : MonoBehaviour
+public class FlyingEnemyAI : ParEnemy
 {
+    [SerializeField] Collider2D detection;
+    [SerializeField] float detectionDistance;
     [SerializeField] Transform target;
     [SerializeField] float speed = 200f;
     [SerializeField] float nextWaypointDistance = 3f;
@@ -16,8 +18,12 @@ public class FlyingEnemyAI : MonoBehaviour
     //bool reachedEndOfPath = false;
 
     Seeker seeker;
-    Rigidbody2D rd; 
-
+    Rigidbody2D rd;
+    private void Awake()
+    {
+        //target = CharacterStateManager.Instance.transform;
+        
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +31,11 @@ public class FlyingEnemyAI : MonoBehaviour
         rd = GetComponent<Rigidbody2D>();
 
         InvokeRepeating("UpdatePath", 0f, updateTime);
+    }
+    private void Update()
+    {
+        PlayerDetection(detection);
+        
     }
     void UpdatePath()
     {
@@ -55,14 +66,16 @@ public class FlyingEnemyAI : MonoBehaviour
         
         var dir = ((Vector2)path.vectorPath[currentWaypoint] - rd.position).normalized;
         var force = dir * speed;//* Time.deltaTime
-
-        rd.velocity = force;
-
-        float distance = Vector2.Distance(rd.position, path.vectorPath[currentWaypoint]);
-
-        if(distance < nextWaypointDistance)
+        if (Vector2.Distance(target.position, rd.position) < detectionDistance)
         {
-            currentWaypoint++;
+            rd.velocity = force;
+
+            float distance = Vector2.Distance(rd.position, path.vectorPath[currentWaypoint]);
+
+            if (distance < nextWaypointDistance)
+            {
+                currentWaypoint++;
+            }
         }
 
         // Animation
@@ -73,5 +86,10 @@ public class FlyingEnemyAI : MonoBehaviour
         {
             transform.localScale = new(1, 1, 1);
         }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionDistance);
     }
 }

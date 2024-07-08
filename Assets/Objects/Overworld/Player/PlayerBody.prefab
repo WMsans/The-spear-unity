@@ -339,6 +339,7 @@ MonoBehaviour:
   fallMultiplier: 5
   maxFallSpeed: -20
   stiff: 1.5
+  invincible: 10
   m_Camera: {fileID: 0}
   spear: {fileID: 0}
   m_SpearObject: {fileID: 2471405703980496222, guid: 36c97213ba97fc943baad04b660ffbcd, type: 3}
