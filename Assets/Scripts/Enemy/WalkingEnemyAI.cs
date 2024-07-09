@@ -1,64 +1,81 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 public class WalkingEnemyAI : ParEnemy
 {
     [SerializeField] Collider2D detection;
-    [SerializeField] Transform pointA;
-    [SerializeField] Transform pointB;
+    [SerializeField] Transform groundCheck;
+    [SerializeField] Transform wallCheck;
+    [SerializeField] LayerMask groundLayer;
+    [SerializeField] float checkRadius;
     [SerializeField] float speed;
     [SerializeField] float accel;
     [SerializeField] float decel;
     Rigidbody2D rb;
-    Vector2 target;
+    float moveDir = 1f;
+    bool facingRight = true;
+    bool checkingGround = false;
+    bool checkingWall = false;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        target = pointB.position;
     }
     private void Update()
     {
         PlayerDetection(detection);
-        var pA = (Vector2)pointA.position;
-        var pB = (Vector2)pointB.position;
 
-        if (Vector2.Distance(rb.position, pB) < 0.5f && target == pB)
-        {
-            target = pA;
-        }else if (Vector2.Distance(rb.position, pA) < 0.5f && target == pA)
-        {
-            target = pB;
-        }
-        var dir = (target - rb.position).normalized;
-        transform.localScale = new(Mathf.Sign(dir.x), 1, 1);
     }
     private void FixedUpdate()
     {
-        var dir = (target - rb.position).normalized;
-        if (Mathf.Abs(rb.velocity.x + dir.x * accel) <= speed || (Mathf.Sign(dir.x) != Mathf.Sign(rb.velocity.x) && Mathf.Abs(dir.x) > 0.001f))
+        checkingGround = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
+        checkingWall = Physics2D.OverlapCircle(wallCheck.position, checkRadius, groundLayer);
+
+        Petrolling();
+    }
+    void Petrolling()
+    {
+        if (!checkingGround || checkingWall)
         {
-            rb.velocity += dir.x * accel * Vector2.right;
+            if (facingRight)
+            {
+                Flip();
+            }
+            else if (!facingRight)
+            {
+                Flip();
+            }
         }
-        else if(Mathf.Abs(rb.velocity.x + dir.x * accel) >= speed && Mathf.Abs(rb.velocity.x) < speed)
+        var dir = moveDir;
+        var _sp = speed;
+        if (Mathf.Abs(rb.velocity.x + dir * accel) <= _sp || (Mathf.Sign(dir) != Mathf.Sign(rb.velocity.x) && Mathf.Abs(dir) > 0.001f))
         {
-            rb.velocity = new (Mathf.Sign(dir.x) * speed, rb.velocity.y);
+            rb.velocity += dir * accel * Vector2.right;
         }
-        if (Mathf.Abs(dir.x) <= 0.001f || (Mathf.Abs(rb.velocity.x) > speed))
+        else if (Mathf.Abs(rb.velocity.x + dir * accel) >= _sp && Mathf.Abs(rb.velocity.x) < _sp)
+        {
+            rb.velocity = new(Mathf.Sign(dir) * _sp, rb.velocity.y);
+        }
+        if (Mathf.Abs(dir) <= 0.001f || (Mathf.Abs(rb.velocity.x) > _sp))
         {
             if (Mathf.Abs(rb.velocity.x) <= Mathf.Abs(decel)) rb.velocity *= Vector2.up;
             else if (rb.velocity.x < 0) rb.velocity += decel * Vector2.right;
             else rb.velocity -= decel * Vector2.right;
         }
-        //rb.velocity = new(dir.x * speed, rb.velocity.y);
-
-        //rb.position += dir.x * speed * Vector2.right * Time.deltaTime;
     }
-    private void OnDrawGizmos()
+    void Flip()
     {
-        Gizmos.DrawWireSphere(pointA.position, 0.5f);
-        Gizmos.DrawWireSphere(pointB.position, 0.5f);
-        Gizmos.DrawLine(pointA.position, pointB.position);
+        moveDir *= -1;
+        facingRight = !facingRight;
+        transform.Rotate(0f, 180f, 0f);
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
+        Gizmos.DrawWireSphere(wallCheck.position, checkRadius);
     }
 }

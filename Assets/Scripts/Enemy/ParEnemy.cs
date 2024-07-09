@@ -6,6 +6,8 @@ public class ParEnemy : MonoBehaviour
 {
     [SerializeField] float attack = 1f;
     [SerializeField] float maxHP = 1f;
+    [SerializeField] int coinNumber = 0;
+    [SerializeField] GameObject coinPrefab;
     [SerializeField] float beatBack = 500f;
     [SerializeField] string[] HurtingEvents;
     public float HP {  get; set; }
@@ -36,6 +38,16 @@ public class ParEnemy : MonoBehaviour
     }
     public void Die()
     {
+        CoinGenerate();
         Destroy(gameObject);
+    }
+    void CoinGenerate()
+    {
+        for (var i = 1; i <= coinNumber; i++)
+        {
+            var force = Quaternion.Euler(0f, 0f, Random.Range(-30f, 30f)) * new Vector3(0, 10, 0);
+            var coin = Instantiate(coinPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+            coin.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
+        }
     }
 }

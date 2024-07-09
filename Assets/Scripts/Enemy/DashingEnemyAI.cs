@@ -8,13 +8,17 @@ public class DashingEnemyAI : ParEnemy
     [Header("Petrolling")]
     
     [SerializeField] Collider2D detection;
-    [SerializeField] Transform GroundCheck;
-    [SerializeField] Transform WallCheck;
+    [SerializeField] Transform groundCheck;
+    [SerializeField] Transform wallCheck;
     [SerializeField] float checkRadius;
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float speed;
     [SerializeField] float accel;
     [SerializeField] float decel;
+    float moveDir = 1f;
+    bool facingRight = true;
+    bool checkingGround = false;
+    bool checkingWall = false;
     [Header("Dashing")]
     [SerializeField] Collider2D vision;
     [SerializeField] float dashingSpeed;
@@ -23,10 +27,6 @@ public class DashingEnemyAI : ParEnemy
     float dashDir;
     bool dashing = false;
     bool dashCoolingDown = false;
-    float moveDir = 1f;
-    bool facingRight = true;
-    bool checkingGround = false;
-    bool checkingWall = false;
     [Header("Others")]
     Rigidbody2D rb;
     
@@ -56,8 +56,8 @@ public class DashingEnemyAI : ParEnemy
     }
     private void FixedUpdate()
     {
-        checkingGround = Physics2D.OverlapCircle(GroundCheck.position, checkRadius, groundLayer);
-        checkingWall = Physics2D.OverlapCircle(WallCheck.position, checkRadius, groundLayer);
+        checkingGround = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
+        checkingWall = Physics2D.OverlapCircle(wallCheck.position, checkRadius, groundLayer);
        
         Petrolling();
     }
@@ -106,10 +106,10 @@ public class DashingEnemyAI : ParEnemy
         facingRight = !facingRight;
         transform.Rotate(0f, 180f, 0f);
     }
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(GroundCheck.position, checkRadius);
-        Gizmos.DrawWireSphere(WallCheck.position, checkRadius);
+        Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
+        Gizmos.DrawWireSphere(wallCheck.position, checkRadius);
     }
 }

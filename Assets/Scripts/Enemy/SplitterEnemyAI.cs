@@ -27,7 +27,6 @@ public class SplitterEnemyAI : ParEnemy
     Transform Target;
     [Header("Detection")]
     [SerializeField] Collider2D Vision;
-    [SerializeField] LayerMask playerLayer;
     bool canSeePlayer;
     [Header("Others")]
     Rigidbody2D rb;
@@ -50,7 +49,7 @@ public class SplitterEnemyAI : ParEnemy
         checkingWall = Physics2D.OverlapCircle(WallCheck.position, checkRadius, groundLayer);
         canSeePlayer = Vision.IsTouching(Target.GetComponent<Collider2D>());
         Petrolling();
-        if (!canSeePlayer || coolingDown)
+        if (!canSeePlayer && !coolingDown)
         {
             if (Mathf.Abs(moveDir) < 0.01f)
                 moveDir = oriDir;
@@ -60,7 +59,8 @@ public class SplitterEnemyAI : ParEnemy
             if (Mathf.Abs(moveDir) >= 0.01f)
                 oriDir = moveDir;
             moveDir = 0f;
-            Attack();
+            if(!coolingDown)
+                Attack();
         }
     }
     void Petrolling()
@@ -132,6 +132,7 @@ public class SplitterEnemyAI : ParEnemy
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(FrontGroundCheck.position, checkRadius);
         Gizmos.DrawWireSphere(WallCheck.position, checkRadius);
-
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(splittPos.position, checkRadius);
     }
 }
