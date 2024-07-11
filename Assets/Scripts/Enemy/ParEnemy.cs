@@ -24,6 +24,18 @@ public class ParEnemy : MonoBehaviour
         }
         return false;
     }
+    public bool PlayerDetection(Collider2D[] detections)
+    {
+        foreach (var detection in detections)
+        {
+            if (detection.IsTouching(CharacterStateManager.Instance.GetComponent<Collider2D>()))
+            {
+                CharacterStateManager.Instance.Hurt(attack, transform.position);
+                return true;
+            }
+        }
+        return false;
+    }
     public void Hurt(float attack, Vector2 otherPos)
     {
         HP -= attack;
