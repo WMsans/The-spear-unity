@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
 
@@ -9,13 +10,13 @@ public class SlashEnemyAI : ParEnemy
     [SerializeField] Collider2D detection;
     [SerializeField] Collider2D vision;
     [SerializeField] Transform rayCast;
-    [SerializeField] LayerMask rayCastMask;
+    [SerializeField] LayerMask playerLayer;
     [SerializeField] float rayCastLength;
     [SerializeField] float attackDistance;
     [SerializeField] float moveDistance; // Minimum distance for attack
     [SerializeField] float attackCooldown;
     RaycastHit2D hit;
-    GameObject target;
+    Transform target;
     Animator anim;
     float tarDistance;
     bool attacking;
@@ -47,27 +48,52 @@ public class SlashEnemyAI : ParEnemy
     {
         PlayerDetection(detection);
         // Detecting player
-        if (vision.IsTouching(CharacterStateManager.Instance.GetComponent<Collider2D>()))
+        
+        if (vision.IsTouchingLayers(playerLayer))
         {
             TargetOn();
         }
         
     }
-    private void TargetOn()
+    void FlipTowardsTarget()
     {
-        target = CharacterStateManager.Instance.gameObject;
+        var disToTarget = target.position - transform.position;
+        if (disToTarget.x < 0 && facingRight)
+        {
+            Flip();
+        }
+        else if (disToTarget.x > 0 && !facingRight)
+        {
+            Flip();
+        }
+    }
+    void TargetOn()
+    {
+        target = CharacterStateManager.Instance.transform;
+        FlipTowardsTarget();
         inRange = true;
+    }
+    void CoolDown()
+    {
+        attackCooldownTimer -= Time.deltaTime;
+
+        if( attackCooldownTimer <= 0 & cooling && attacking)
+        {
+            cooling = false;
+            attackCooldownTimer = attackCooldown;
+        }
     }
     private void FixedUpdate()
     {
         checkingGround = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
         checkingWall = Physics2D.OverlapCircle(wallCheck.position, checkRadius, groundLayer);
 
+        // Petrolling
+        Petrolling();
         // If the player is in vision
         if (inRange)
         {
-            var dir = Mathf.Sign(target.transform.position.x - transform.position.x);
-            hit = Physics2D.Raycast(rayCast.position, dir * Vector2.right, rayCastLength, rayCastMask);
+            hit = Physics2D.Raycast(rayCast.position, transform.right, rayCastLength, playerLayer);
             RayCastDebugger();
         }
         // If the player is detected
@@ -78,6 +104,7 @@ public class SlashEnemyAI : ParEnemy
         else
         {
             inRange = false;
+            if (Mathf.Abs(moveDir) < 0.01f) moveDir = facingRight ? 1f : -1f;
         }
         if (!inRange)
         {
@@ -87,8 +114,9 @@ public class SlashEnemyAI : ParEnemy
     }
     void EnemyLogic()
     {
-        tarDistance = Vector2.Distance(rb.position, target.transform.position);
-        
+        tarDistance = Vector2.Distance(rb.position, target.position);
+        if (Mathf.Abs(moveDir) >= 0.01f)  moveDir = 0f;
+
         if(tarDistance > attackDistance)
         {
             Move();
@@ -100,6 +128,7 @@ public class SlashEnemyAI : ParEnemy
         }
         if (cooling)
         {
+            CoolDown();
             anim.SetBool("attack", false);
         }
     }
@@ -108,7 +137,7 @@ public class SlashEnemyAI : ParEnemy
         anim.SetBool("canWalk", true);
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("EliteAttack"))
         {
-            var dir = Mathf.Sign(target.transform.position.x - transform.position.x);
+            var dir = Mathf.Sign(target.position.x - transform.position.x);
             var _sp = speed;
             if (Mathf.Abs(rb.velocity.x + dir * accel) <= _sp || (Mathf.Sign(dir) != Mathf.Sign(rb.velocity.x) && Mathf.Abs(dir) > 0.001f))
             {
@@ -128,7 +157,7 @@ public class SlashEnemyAI : ParEnemy
     }
     void Attack()
     {
-        attackCooldown = attackCooldownTimer;
+        attackCooldownTimer = attackCooldown;
         attacking = true;
         anim.SetBool("canWalk", false);
         anim.SetBool("attack", true);
@@ -177,20 +206,25 @@ public class SlashEnemyAI : ParEnemy
     }
     void RayCastDebugger()
     {
-        var dir = Mathf.Sign(target.transform.position.x - transform.position.x);
         if (tarDistance > attackDistance)
         {
-            Debug.DrawRay(rayCast.position, dir * Vector2.right * rayCastLength, Color.red);
+            Debug.DrawRay(rayCast.position, transform.right * rayCastLength, Color.red);
         }
         else
         {
-            Debug.DrawRay(rayCast.position, dir * Vector2.right * rayCastLength, Color.green);
+            Debug.DrawRay(rayCast.position, transform.right * rayCastLength, Color.green);
         }
+    }
+    public void TriggerCooling()
+    {
+        cooling  = true;
     }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
         Gizmos.DrawWireSphere(wallCheck.position, checkRadius);
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(rayCast.position, rayCast.position + rayCastLength * transform.right);
     }
 }
