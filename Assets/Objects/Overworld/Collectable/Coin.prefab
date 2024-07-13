@@ -197,7 +197,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f13aadf88da571149a761b9ced62a91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attractorSpeed: 75
+  attractorSpeed: 150
+  maxSpeed: 10
   destroyTime: 7.5
   Detecter: {fileID: 3764780840030895029}
   Collider: {fileID: 1559364120743540960}

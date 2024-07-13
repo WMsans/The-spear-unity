@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 
 public class FlyingEnemyAI : ParEnemy
 {
+    [Header("Player Follow")]
     [SerializeField] Collider2D detection;
     [SerializeField] float detectionDistance;
     [SerializeField] Transform target;
@@ -21,15 +22,15 @@ public class FlyingEnemyAI : ParEnemy
     Rigidbody2D rd;
     private void Awake()
     {
-        //target = CharacterStateManager.Instance.transform;
-        
+        seeker = GetComponent<Seeker>();
+        rd = GetComponent<Rigidbody2D>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        seeker = GetComponent<Seeker>();
-        rd = GetComponent<Rigidbody2D>();
+        HP = MaxHP;
 
+        target = CharacterStateManager.Instance.transform;
         InvokeRepeating("UpdatePath", 0f, updateTime);
     }
     private void Update()
@@ -39,7 +40,7 @@ public class FlyingEnemyAI : ParEnemy
     }
     void UpdatePath()
     {
-        if(seeker.IsDone())
+        //if(seeker.IsDone())
             seeker.StartPath(rd.position, target.position, OnPathComplete);
     }
     void OnPathComplete(Path p)
@@ -65,7 +66,7 @@ public class FlyingEnemyAI : ParEnemy
         }
         
         var dir = ((Vector2)path.vectorPath[currentWaypoint] - rd.position).normalized;
-        var force = dir * speed;//* Time.deltaTime
+        var force = dir * speed;
         if (Vector2.Distance(target.position, rd.position) < detectionDistance)
         {
             rd.velocity = force;
@@ -82,7 +83,8 @@ public class FlyingEnemyAI : ParEnemy
         if(force.x < 0f)
         {
             transform.localScale = new(-1, 1, 1);  
-        }else if(force.x > 0f)
+        }
+        else if(force.x > 0f)
         {
             transform.localScale = new(1, 1, 1);
         }

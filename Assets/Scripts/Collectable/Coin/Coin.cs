@@ -7,6 +7,7 @@ using UnityEngine;
 public class Coin : MonoBehaviour
 {
     [SerializeField] float attractorSpeed = 5f;
+    [SerializeField] float maxSpeed = 10f;
     [SerializeField] float destroyTime = 7.5f;
     [SerializeField] Collider2D Detecter;
     [SerializeField] Collider2D Collider;
@@ -32,6 +33,7 @@ public class Coin : MonoBehaviour
             //rb.position = Vector2.MoveTowards(rb.position, playerRb.position, attractorSpeed * (1f / Vector2.Distance(rb.position, playerRb.position)) * Time.deltaTime);
             rb.gravityScale = 0f;
             rb.AddForce((playerRb.position - rb.position).normalized * attractorSpeed * (1f / Vector2.Distance(rb.position, playerRb.position)) );//* Time.deltaTime
+            rb.velocity = Vector2.ClampMagnitude(rb.velocity, maxSpeed);
             if (Vector2.Distance(rb.position, playerRb.position) <= 1)
             {
                 if (!collected)

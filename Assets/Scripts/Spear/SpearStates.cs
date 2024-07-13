@@ -200,7 +200,8 @@ public class SpearPokeState : SpearBaseState
                 spear.SwitchState(spear.normalState);
                 return true;
             }
-        }else if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        }
+        else if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             if (collision.gameObject.CompareTag("Enemy"))
             {
@@ -209,7 +210,19 @@ public class SpearPokeState : SpearBaseState
 
                 var _playerRd = spear.Player.GetComponent<Rigidbody2D>();
                 _playerRd.velocity *= Vector2.right;
-                _playerRd.AddForce(new(500f * (_playerRd.position - (Vector2)collision.transform.position).normalized.x, 500f));
+                _playerRd.velocity = new(10f * (_playerRd.position - (Vector2)collision.transform.position).normalized.x, 10f);
+
+                spear.SwitchState(spear.normalState);
+                return true;
+            }
+            else if (collision.gameObject.CompareTag("Shield"))
+            {
+                collision.GetComponent<Shield>().Poked(anchorPoint);
+                spear.ReadyToPokeTimer = spear.ReadyToPokeTime;
+
+                var _playerRd = spear.Player.GetComponent<Rigidbody2D>();
+                _playerRd.velocity *= Vector2.right;
+                _playerRd.velocity = new(10f * (_playerRd.position - (Vector2)collision.transform.position).normalized.x, 15f);
 
                 spear.SwitchState(spear.normalState);
                 return true;

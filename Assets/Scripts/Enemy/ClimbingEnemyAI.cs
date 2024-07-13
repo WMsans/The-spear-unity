@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClimbingEnemyAI : MonoBehaviour
+public class ClimbingEnemyAI : ParEnemy
 {
     // Start is called before the first frame update
     void Start()

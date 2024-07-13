@@ -29,6 +29,7 @@ public class SlashEnemyAI : ParEnemy
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float checkRadius = 0.2f;
     [SerializeField] float speed = 3f;
+    [SerializeField] float dashingSpeed = 5f;
     [SerializeField] float accel = 1.5f;
     [SerializeField] float decel = 1.2f;
     float moveDir = 1f;
@@ -138,7 +139,7 @@ public class SlashEnemyAI : ParEnemy
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("EliteAttack"))
         {
             var dir = Mathf.Sign(target.position.x - transform.position.x);
-            var _sp = speed;
+            var _sp = dashingSpeed;
             if (Mathf.Abs(rb.velocity.x + dir * accel) <= _sp || (Mathf.Sign(dir) != Mathf.Sign(rb.velocity.x) && Mathf.Abs(dir) > 0.001f))
             {
                 rb.velocity += dir * accel * Vector2.right;

@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: EliteWalk
+  m_Name: ShieldIdle
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -31,7 +31,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5833333
+        time: 0.6666667
         value: -0.16843414
         inSlope: 0
         outSlope: 0
@@ -61,7 +61,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5833333
+        time: 0.6666667
         value: 0.92451096
         inSlope: 0
         outSlope: 0
@@ -91,7 +91,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5833333
+        time: 0.6666667
         value: 1.338211
         inSlope: 0
         outSlope: 0
@@ -121,7 +121,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5833333
+        time: 0.6666667
         value: 1.7618179
         inSlope: 0
         outSlope: 0
@@ -141,21 +141,23 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 1471561912, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+      value: {fileID: 743610334, guid: 5e55520c38336de49aac607436b5d472, type: 3}
     - time: 0.083333336
-      value: {fileID: 504324935, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+      value: {fileID: -1889052591, guid: 5e55520c38336de49aac607436b5d472, type: 3}
     - time: 0.16666667
-      value: {fileID: -891786665, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+      value: {fileID: 763080726, guid: 5e55520c38336de49aac607436b5d472, type: 3}
     - time: 0.25
-      value: {fileID: -542780395, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+      value: {fileID: -2033057347, guid: 5e55520c38336de49aac607436b5d472, type: 3}
     - time: 0.33333334
-      value: {fileID: 714137766, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+      value: {fileID: -880331994, guid: 5e55520c38336de49aac607436b5d472, type: 3}
     - time: 0.41666666
-      value: {fileID: -1039882877, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+      value: {fileID: -328422661, guid: 5e55520c38336de49aac607436b5d472, type: 3}
     - time: 0.5
-      value: {fileID: -2053508039, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+      value: {fileID: -378928032, guid: 5e55520c38336de49aac607436b5d472, type: 3}
     - time: 0.5833333
-      value: {fileID: 1173440447, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+      value: {fileID: -566349264, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+    - time: 0.6666667
+      value: {fileID: -1999420126, guid: 5e55520c38336de49aac607436b5d472, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -214,20 +216,21 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 1471561912, guid: 5e55520c38336de49aac607436b5d472, type: 3}
-    - {fileID: 504324935, guid: 5e55520c38336de49aac607436b5d472, type: 3}
-    - {fileID: -891786665, guid: 5e55520c38336de49aac607436b5d472, type: 3}
-    - {fileID: -542780395, guid: 5e55520c38336de49aac607436b5d472, type: 3}
-    - {fileID: 714137766, guid: 5e55520c38336de49aac607436b5d472, type: 3}
-    - {fileID: -1039882877, guid: 5e55520c38336de49aac607436b5d472, type: 3}
-    - {fileID: -2053508039, guid: 5e55520c38336de49aac607436b5d472, type: 3}
-    - {fileID: 1173440447, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+    - {fileID: 743610334, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+    - {fileID: -1889052591, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+    - {fileID: 763080726, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+    - {fileID: -2033057347, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+    - {fileID: -880331994, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+    - {fileID: -328422661, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+    - {fileID: -378928032, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+    - {fileID: -566349264, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+    - {fileID: -1999420126, guid: 5e55520c38336de49aac607436b5d472, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.6666666
+    m_StopTime: 0.75
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -257,7 +260,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5833333
+        time: 0.6666667
         value: -0.16843414
         inSlope: 0
         outSlope: 0
@@ -287,7 +290,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5833333
+        time: 0.6666667
         value: 0.92451096
         inSlope: 0
         outSlope: 0
@@ -317,7 +320,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5833333
+        time: 0.6666667
         value: 1.338211
         inSlope: 0
         outSlope: 0
@@ -347,7 +350,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5833333
+        time: 0.6666667
         value: 1.7618179
         inSlope: 0
         outSlope: 0
@@ -366,4 +369,67 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0
+    functionName: HoldShield
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.083333336
+    functionName: HoldShield
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.16666667
+    functionName: HoldShield
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.25
+    functionName: HoldShield
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.33333334
+    functionName: HoldShield
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.41666666
+    functionName: HoldShield
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.5
+    functionName: HoldShield
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.5833333
+    functionName: HoldShield
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.6666667
+    functionName: HoldShield
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

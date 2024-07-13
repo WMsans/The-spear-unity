@@ -3,7 +3,14 @@ guid: 259212987e04e694ca0c8e9f5abc2e65
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - coinPrefab: {fileID: 5677224635280632684, guid: 8ac1dc77479a2fb4b9514b375a6a0413, type: 3}
+  - detection: {instanceID: 0}
+  - FrontGroundCheck: {instanceID: 0}
+  - WallCheck: {instanceID: 0}
+  - bulletPrefab: {instanceID: 0}
+  - splittPos: {instanceID: 0}
+  - Vision: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

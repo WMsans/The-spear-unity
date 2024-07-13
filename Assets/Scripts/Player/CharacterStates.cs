@@ -220,15 +220,22 @@ public class CharacterNormalState : CharacterBaseState
             {
                 m_Rigidbody2D.velocity += _sign(move) * accelerationSpeed * Vector2.right;
             }
-            else if((Mathf.Abs(m_Rigidbody2D.velocity.x + _sign(move) * accelerationSpeed) > _crouchingHorSpeed || Mathf.Abs(m_Rigidbody2D.velocity.x) < _crouchingHorSpeed) && chara.AllowMoveTimer <= 0)
+            else if((Mathf.Abs(m_Rigidbody2D.velocity.x + _sign(move) * accelerationSpeed) > _crouchingHorSpeed && Mathf.Abs(m_Rigidbody2D.velocity.x) < _crouchingHorSpeed) && chara.AllowMoveTimer <= 0)
             {
                 m_Rigidbody2D.velocity = new(_sign(move) * _crouchingHorSpeed, m_Rigidbody2D.velocity.y);
             }
             if (Mathf.Abs( move) <= 0.001f || (Mathf.Abs(m_Rigidbody2D.velocity.x) > m_BouncedSpeed && chara.Bounced) || (Mathf.Abs(m_Rigidbody2D.velocity.x) > _crouchingHorSpeed && !chara.Bounced)) 
             {
-                if(Mathf.Abs( m_Rigidbody2D.velocity.x) <= Mathf.Abs(decelerationSpeed))m_Rigidbody2D.velocity *= Vector2.up;
-                else if (m_Rigidbody2D.velocity.x < 0) m_Rigidbody2D.velocity += decelerationSpeed * Vector2.right;
-                else m_Rigidbody2D.velocity -= decelerationSpeed * Vector2.right;
+                
+                if (Mathf.Abs(m_Rigidbody2D.velocity.x) <= decelerationSpeed)
+                {
+                    m_Rigidbody2D.velocity *= Vector2.up;
+                }
+                else
+                {
+                    if (m_Rigidbody2D.velocity.x < 0) m_Rigidbody2D.velocity += decelerationSpeed * Vector2.right;
+                    else m_Rigidbody2D.velocity -= decelerationSpeed * Vector2.right;
+                }
             }
             // If the input is moving the player right and the player is facing left...
             if (move > 0 && !m_FacingRight)

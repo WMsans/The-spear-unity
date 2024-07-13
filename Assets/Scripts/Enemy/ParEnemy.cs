@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ParEnemy : MonoBehaviour
 {
+    [Header("Enemy Data")]
     [SerializeField] float attack = 1f;
     [SerializeField] float maxHP = 1f;
     [SerializeField] int coinNumber = 0;
@@ -11,6 +12,8 @@ public class ParEnemy : MonoBehaviour
     [SerializeField] float beatBack = 500f;
     [SerializeField] string[] HurtingEvents;
     public float HP {  get; set; }
+    public float MaxHP { get { return maxHP; } }
+    public float AttackNum { get { return attack; } }
     private void Start()
     {
         HP = maxHP;

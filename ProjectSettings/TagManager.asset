@@ -11,6 +11,8 @@ TagManager:
   - LevelBlock
   - Switch
   - Enemy
+  - Shield
+  - DoorGroup
   layers:
   - Default
   - TransparentFX
