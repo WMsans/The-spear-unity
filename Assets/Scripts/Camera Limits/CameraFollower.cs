@@ -7,7 +7,7 @@ public class CameraFollower : MonoBehaviour, IDataPersistence
     public static CameraFollower instance;
     [SerializeField] Transform follow;
     [SerializeField] Camera cam;
-    [SerializeField] float followSpeed;
+    [SerializeField] float followSpeed = 0.3f;
     [SerializeField] float lookForward;
 
     Vector3 _moveDamp = new();
@@ -25,7 +25,6 @@ public class CameraFollower : MonoBehaviour, IDataPersistence
         else
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
         }
             
     }

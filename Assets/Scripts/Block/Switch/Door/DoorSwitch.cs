@@ -16,5 +16,12 @@ public class DoorSwitch : SwitchObj
             door.SetActive(!state);
         }
     }
-    
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.blue;
+        foreach (var door in doors)
+        {
+            Gizmos.DrawLine(transform.position, door.transform.position);
+        }
+    }
 }

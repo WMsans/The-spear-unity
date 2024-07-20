@@ -337,7 +337,7 @@ MonoBehaviour:
   m_CoyoteTime: 5
   lowJumpMultiplier: 5
   fallMultiplier: 5
-  maxFallSpeed: -20
+  maxFallSpeed: -13
   stiff: 1.5
   invincible: 10
   m_Camera: {fileID: 0}

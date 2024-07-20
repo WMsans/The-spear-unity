@@ -237,6 +237,8 @@ public class CharacterNormalState : CharacterBaseState
                     else m_Rigidbody2D.velocity -= decelerationSpeed * Vector2.right;
                 }
             }
+            if (chara.MaxFallSpeed < 0)
+                m_Rigidbody2D.velocity = new(m_Rigidbody2D.velocity.x, Mathf.Max(m_Rigidbody2D.velocity.y, chara.MaxFallSpeed));
             // If the input is moving the player right and the player is facing left...
             if (move > 0 && !m_FacingRight)
             {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wave : MonoBehaviour
+public class EnemyWave : MonoBehaviour
 {
     [SerializeField] GameObject spawnSfx;
     [SerializeField] GameObject[] enemies;

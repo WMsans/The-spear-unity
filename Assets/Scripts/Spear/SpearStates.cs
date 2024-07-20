@@ -130,6 +130,7 @@ public class SpearPokeState : SpearBaseState
                 for (var j = 0; j < 4; j++)
                 {
                     var _c = collision.gameObject.GetComponent<GroundCollisions>().Colliers[j];
+                    if(!_c.isActiveAndEnabled) continue;
                     if (_c.OverlapPoint(anchorPoint))
                     {
                         spear.AnchorPoint = anchorPoint;
@@ -149,7 +150,7 @@ public class SpearPokeState : SpearBaseState
                 for (var j = 0; j < 4; j++)
                 {
                     var _c = collision.gameObject.GetComponent<GroundCollisions>().Colliers[j];
-                    if (!_c.enabled) continue;
+                    if (!_c.isActiveAndEnabled) continue;
                     if (_c.OverlapPoint(anchorPoint))
                     {
                         _faceIndex = j;

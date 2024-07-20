@@ -54,8 +54,8 @@ public class Arena : MonoBehaviour
     void GenerateWave(int nowWaveNum)
     {
         var _newWave = wavesObject[nowWaveNum];
-        _newWave.GetComponent<Wave>().GenerateEnemies();
-        var _newEnemies = _newWave.GetComponent<Wave>().GetEnemies();
+        _newWave.GetComponent<EnemyWave>().GenerateEnemies();
+        var _newEnemies = _newWave.GetComponent<EnemyWave>().GetEnemies();
         foreach (var newE in _newEnemies)
         {
             enemies.Add(newE);

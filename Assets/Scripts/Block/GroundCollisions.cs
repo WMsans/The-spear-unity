@@ -16,8 +16,5 @@ public class GroundCollisions : MonoBehaviour
     public Collider2D[] Colliers {  get { return new Collider2D[] { right, down, left, up }; } }
     public bool Anchored { get; set; } = false;
 
-    private void Awake()
-    {
-        //GetComponent<SpriteRenderer>().enabled = false;
-    }
+    
 }
