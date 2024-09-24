@@ -191,26 +191,6 @@ public class CharacterNormalState : CharacterBaseState
                 }
             }
             chara.IsCrouched = crouch;
-            /* 
-            // Move the character by finding the target velocity
-            Vector3 targetVelocity;
-            if (chara.Bounced && !m_Grounded && Mathf.Sign(move) == Mathf.Sign(m_Rigidbody2D.velocity.x) && Mathf.Abs(move) > 0.001f)
-            {
-                targetVelocity = new(Mathf.Min( Mathf.Max(Mathf.Abs( m_Rigidbody2D.velocity.x), Mathf.Abs( move * maxHorizontalSpeed * 10f)), m_BouncedSpeed) * Mathf.Sign(move), m_Rigidbody2D.velocity.y);
-            }else if(chara.AllowMoveTimer > 0)
-            {
-                targetVelocity = new(Mathf.Clamp(m_Rigidbody2D.velocity.x, -m_BouncedSpeed, m_BouncedSpeed), m_Rigidbody2D.velocity.y);
-            }else
-            {
-                targetVelocity = new(move * maxHorizontalSpeed * 10f, m_Rigidbody2D.velocity.y);
-            }
-
-            if (chara.MaxFallSpeed < 0)
-                targetVelocity.y = Mathf.Max(targetVelocity.y, chara.MaxFallSpeed);
-            
-            // And then smoothing it out and applying it to the character
-            m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-            */
 
             // Reduce the speed by the crouchSpeed multiplier
             var _crouchingHorSpeed = maxHorizontalSpeed;

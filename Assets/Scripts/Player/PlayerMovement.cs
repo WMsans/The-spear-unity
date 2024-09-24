@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[RequireComponent(typeof(CharacterStateManager))]
 public class PlayerMovement : MonoBehaviour
 {
     CharacterStateManager manager;
