@@ -759,9 +759,17 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1632774934}
+    - target: {fileID: 5618822753179902547, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 7013269819672220296, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
       propertyPath: m_Name
       value: PlayerBody
+      objectReference: {fileID: 0}
+    - target: {fileID: 8136289031700353883, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.025
       objectReference: {fileID: 0}
     - target: {fileID: 8496515891089895065, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
       propertyPath: m_LocalPosition.x
