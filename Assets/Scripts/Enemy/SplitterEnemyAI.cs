@@ -36,7 +36,7 @@ public class SplitterEnemyAI : ParEnemy
     }
     private void Start()
     {
-        HP = MaxHP;
+        Hp = MaxHp;
         Target = CharacterStateManager.Instance.transform;
     }
     private void Update()

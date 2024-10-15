@@ -16,6 +16,8 @@ public abstract class CharacterBaseState
 
 public class CharacterNormalState : CharacterBaseState
 {
+    private static readonly int Speed = Animator.StringToHash("Speed");
+    private static readonly int Grounded = Animator.StringToHash("Grounded");
     float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
     float m_CrouchSpeed = .36f;                        // Amount of maxSpeed applied to crouching movement. 1 = 100%
     float m_MovementSmoothing = .05f;                  // How much to smooth out the movement
@@ -88,12 +90,17 @@ public class CharacterNormalState : CharacterBaseState
     }
     public override void UpdateState(CharacterStateManager chara)
     {
-        
         if (chara.Spear.Anchored)
         {
             chara.SwitchState(chara.anchorState);
         }
-        
+        HandleAnimator(chara.animator);
+    }
+
+    void HandleAnimator(Animator animator)
+    {
+        animator.SetFloat(Speed, Mathf.Abs(m_Rigidbody2D.velocity.x));
+        animator.SetBool(Grounded, m_Grounded);
     }
     public override void FixedUpdateState(CharacterStateManager chara)
     {
@@ -371,35 +378,5 @@ public class CharacterStiffState : CharacterBaseState
     {
         chara.Spear.SwitchState(chara.Spear.normalState);
     }
-    /*public class CoroutineManager : MonoBehaviour
-    {
-        // 单例模式
-        public static CoroutineManager Instance { get; private set; }
-
-        void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
-
-        // 开始协程的方法
-        public Coroutine StartManagedCoroutine(IEnumerator coroutine)
-        {
-            return StartCoroutine(coroutine);
-        }
-
-        // 停止协程的方法
-        public void StopManagedCoroutine(Coroutine coroutine)
-        {
-            StopCoroutine(coroutine);
-        }
-    }*/
 }
 

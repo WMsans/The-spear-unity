@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json.Bson;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,6 +31,8 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     [SerializeField] Camera m_Camera;
     [SerializeField] SpearStateManager spear;
     [SerializeField] GameObject m_SpearObject;
+    public Transform spearPoint;
+    public Animator animator;
     public static CharacterStateManager Instance { get; private set; }
 
 
@@ -156,5 +159,14 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     public void SaveData(ref GameData gameData)
     {
         gameData.playerPosition = transform.position;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(m_GroundCheck.position, .2f);
+        Gizmos.DrawWireSphere(m_CeilingCheck.position, .2f);
+        Gizmos.DrawWireSphere(m_LeftCheck.position, .2f);
+        Gizmos.DrawWireSphere(m_RightCheck.position, .2f);
     }
 }

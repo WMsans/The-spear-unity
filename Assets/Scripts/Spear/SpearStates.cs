@@ -13,23 +13,23 @@ public abstract class SpearBaseState
 
 public class SpearNormalState : SpearBaseState
 {
-    Camera cam;
-    Rigidbody2D rd;
+    Camera _cam;
+    Rigidbody2D _rd;
 
-    Vector2 mousePos;
+    Vector2 _mousePos;
 
     public bool AutoPoke { get; set; } = false;
     public override void EnterState(SpearStateManager spear)
     {
-        cam = spear.Cam;
-        rd = spear.GetComponent<Rigidbody2D>();
+        _cam = spear.Cam;
+        _rd = spear.GetComponent<Rigidbody2D>();
 
         spear.AnchorBlock = null;
         
     }
     public override void UpdateState(SpearStateManager spear)
     {
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        _mousePos = _cam.ScreenToWorldPoint(Input.mousePosition);
 
         spear.ReachDistance += (0f - spear.ReachDistance) * spear.PokeSpeed;
         // If left mb pressed, poke
@@ -42,14 +42,14 @@ public class SpearNormalState : SpearBaseState
     {
         spear.ReadyToPokeTimer = Mathf.Max(spear.ReadyToPokeTimer - 1, 0);
 
-        var lookDir = mousePos - spear.SpearPosition;
+        var lookDir = _mousePos - spear.SpearPosition;
         var angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        rd.rotation = angle;
+        _rd.rotation = angle;
 
     }
     public override void LateUpdateState(SpearStateManager spear)
     {
-        spear.transform.position = new(spear.SpearPosition.x + spear.ReachDistance * Mathf.Cos((rd.rotation + 90) * Mathf.Deg2Rad), spear.SpearPosition.y + spear.ReachDistance * Mathf.Sin((rd.rotation + 90) * Mathf.Deg2Rad));
+        spear.transform.position = new(spear.SpearPosition.x + spear.ReachDistance * Mathf.Cos((_rd.rotation + 90) * Mathf.Deg2Rad), spear.SpearPosition.y + spear.ReachDistance * Mathf.Sin((_rd.rotation + 90) * Mathf.Deg2Rad));
     }
     public override void OnCollisionStay2DState(SpearStateManager spear, Collision2D collision)
     {
@@ -59,30 +59,30 @@ public class SpearNormalState : SpearBaseState
 
 public class SpearPokeState : SpearBaseState
 {
-    Camera cam;
-    Rigidbody2D rd;
-    int m_WhatIsGround;
-    float pokeSpeed;
-    float pokeDis;
-    Transform spearHead;
+    Camera _cam;
+    Rigidbody2D _rd;
+    int _whatIsGround;
+    float _pokeSpeed;
+    float _pokeDis;
+    Transform _spearHead;
     int _faceIndex;
 
-    Vector2 mousePos;
+    Vector2 _mousePos;
 
     public int FaceIndex { get { return _faceIndex; } }
     public override void EnterState(SpearStateManager spear)
     {
-        cam = spear.Cam;
-        rd = spear.GetComponent<Rigidbody2D>();
-        pokeSpeed = spear.PokeSpeed;
-        pokeDis = spear.PokeDistance;
+        _cam = spear.Cam;
+        _rd = spear.GetComponent<Rigidbody2D>();
+        _pokeSpeed = spear.PokeSpeed;
+        _pokeDis = spear.PokeDistance;
         _faceIndex = -1;
     }
     public override void UpdateState(SpearStateManager spear)
     {
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        _mousePos = _cam.ScreenToWorldPoint(Input.mousePosition);
 
-        spear.ReachDistance += (pokeDis - spear.ReachDistance) * pokeSpeed;
+        spear.ReachDistance += (_pokeDis - spear.ReachDistance) * _pokeSpeed;
 
         if (!Input.GetButton("Fire1") || spear.Player.IsCrouched)
         {
@@ -92,34 +92,34 @@ public class SpearPokeState : SpearBaseState
     }
     public override void FixedUpdateState(SpearStateManager spear)
     {
-        var lookDir = mousePos - spear.SpearPosition;
+        var lookDir = _mousePos - spear.SpearPosition;
         var angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        rd.rotation = angle;
+        _rd.rotation = angle;
 
         Collider2D[] cols = new Collider2D[102];
-        var colNum = rd.OverlapCollider(new ContactFilter2D().NoFilter(), cols);
+        var colNum = _rd.OverlapCollider(new ContactFilter2D().NoFilter(), cols);
         if (colNum > 0)
         {
             for (var i = 0f; i <= 1f; i += 0.01f)
             {
-                var _testPoint = spear.SpearPosition + (spear.SpearHead - spear.SpearPosition) * i;
-                var _flag = false;
+                var testPoint = spear.SpearPosition + (spear.SpearHead - spear.SpearPosition) * i;
+                var flag = false;
                 for (var j = 0; j < colNum; j++)
                 {
                     var collision = cols[j];
-                    if (collision.OverlapPoint(_testPoint))
+                    if (collision.OverlapPoint(testPoint))
                     {
-                        _flag = ComparePoint(spear, collision, _testPoint);
-                        if (_flag) break;
+                        flag = ComparePoint(spear, collision, testPoint);
+                        if (flag) break;
                     }
                 }
-                if (_flag) break;
+                if (flag) break;
             }
         }
     }
     public override void LateUpdateState(SpearStateManager spear)
     {
-        spear.transform.position = new(spear.SpearPosition.x + spear.ReachDistance * Mathf.Cos((rd.rotation + 90) * Mathf.Deg2Rad), spear.SpearPosition.y + spear.ReachDistance * Mathf.Sin((rd.rotation + 90) * Mathf.Deg2Rad));
+        spear.transform.position = new(spear.SpearPosition.x + spear.ReachDistance * Mathf.Cos((_rd.rotation + 90) * Mathf.Deg2Rad), spear.SpearPosition.y + spear.ReachDistance * Mathf.Sin((_rd.rotation + 90) * Mathf.Deg2Rad));
     }
     bool ComparePoint(SpearStateManager spear, Collider2D collision, Vector2 anchorPoint)
     {
@@ -129,9 +129,9 @@ public class SpearPokeState : SpearBaseState
             {
                 for (var j = 0; j < 4; j++)
                 {
-                    var _c = collision.gameObject.GetComponent<GroundCollisions>().Colliers[j];
-                    if(!_c.isActiveAndEnabled) continue;
-                    if (_c.OverlapPoint(anchorPoint))
+                    var c = collision.gameObject.GetComponent<GroundCollisions>().Colliers[j];
+                    if(!c.isActiveAndEnabled) continue;
+                    if (c.OverlapPoint(anchorPoint))
                     {
                         spear.AnchorPoint = anchorPoint;
                         _faceIndex = j;
@@ -149,31 +149,31 @@ public class SpearPokeState : SpearBaseState
             {
                 for (var j = 0; j < 4; j++)
                 {
-                    var _c = collision.gameObject.GetComponent<GroundCollisions>().Colliers[j];
-                    if (!_c.isActiveAndEnabled) continue;
-                    if (_c.OverlapPoint(anchorPoint))
+                    var c = collision.gameObject.GetComponent<GroundCollisions>().Colliers[j];
+                    if (!c.isActiveAndEnabled) continue;
+                    if (c.OverlapPoint(anchorPoint))
                     {
                         _faceIndex = j;
 
-                        var _playerRd = spear.Player.GetComponent<Rigidbody2D>();
+                        var playerRd = spear.Player.GetComponent<Rigidbody2D>();
 
-                        var _dir = _playerRd.position - anchorPoint;
-                        var num2 = Mathf.Sqrt(_dir.sqrMagnitude);
-                        _dir = new Vector2(_dir.x / num2, Mathf.Max(0f, _dir.y / num2));
+                        var dir = playerRd.position - anchorPoint;
+                        var num2 = Mathf.Sqrt(dir.sqrMagnitude);
+                        dir = new Vector2(dir.x / num2, Mathf.Max(0f, dir.y / num2));
 
                         if (_faceIndex == 0 || _faceIndex == 2)// Left or Right face
                         {
                             spear.Player.AllowMoveTimer = 10;
-                            _playerRd.velocity = new(25f * Mathf.Sign(_dir.x), _dir.y * 15f);
+                            playerRd.velocity = new(25f * Mathf.Sign(dir.x), dir.y * 15f);
                         }
                         else if (_faceIndex == 3)// Up face
                         {
-                            _playerRd.velocity = new(_playerRd.velocity.x, 15f);
+                            playerRd.velocity = new(playerRd.velocity.x, 15f);
                         }
                         else// Down face
                         {
-                            _playerRd.velocity *= Vector2.right;
-                            _dir.x = 0f;
+                            playerRd.velocity *= Vector2.right;
+                            dir.x = 0f;
                         }
                         spear.Player.BoucedFace = _faceIndex;
 
@@ -371,20 +371,20 @@ public class SpearPokeState : SpearBaseState
 
 public class SpearAnchorState : SpearBaseState
 {
-    Rigidbody2D rd;
-    float pokeSpeed;
-    float maxSpinSpeed;
-    float spinSpeed;
-    float m_Velocity;
+    Rigidbody2D _rd;
+    float _pokeSpeed;
+    float _maxSpinSpeed;
+    float _spinSpeed;
+    float _velocity;
     int _faceIndex; 
     public override void EnterState(SpearStateManager spear)
     {
-        rd = spear.GetComponent<Rigidbody2D>();
-        pokeSpeed =spear.PokeSpeed;
+        _rd = spear.GetComponent<Rigidbody2D>();
+        _pokeSpeed =spear.PokeSpeed;
         spear.Anchored = true;
-        maxSpinSpeed = spear.SpinSpeed;
-        spinSpeed = 0f;
-        m_Velocity = 0f;
+        _maxSpinSpeed = spear.SpinSpeed;
+        _spinSpeed = 0f;
+        _velocity = 0f;
         _faceIndex = spear.pokeState.FaceIndex;
     }
     public override void UpdateState(SpearStateManager spear)
@@ -407,31 +407,31 @@ public class SpearAnchorState : SpearBaseState
     public override void FixedUpdateState(SpearStateManager spear)
     {
         // Rotate the spear
-        var _tarSpeed = 0f;
-        var _tarClamp = 0f;
+        var tarSpeed = 0f;
+        var tarClamp = 0f;
         if(_faceIndex == 0 || _faceIndex == 2)// Right and Left
         {
-            _tarSpeed = Input.GetAxisRaw("Vertical");
-            if (_faceIndex == 2) _tarSpeed *= -1;
+            tarSpeed = Input.GetAxisRaw("Vertical");
+            if (_faceIndex == 2) tarSpeed *= -1;
         }
         else if(_faceIndex == 1 || _faceIndex == 3) // Down and Up
         {
-            _tarSpeed = Input.GetAxisRaw("Horizontal");
-            if (_faceIndex == 3) _tarSpeed *= -1;
+            tarSpeed = Input.GetAxisRaw("Horizontal");
+            if (_faceIndex == 3) tarSpeed *= -1;
         }
 
-        if (_faceIndex == 0) _tarClamp = 90f;
-        else if (_faceIndex == 1) _tarClamp = 0f;
-        else if (_faceIndex == 2) _tarClamp = -90f;
-        else if (_faceIndex == 3) _tarClamp = 180f;
+        if (_faceIndex == 0) tarClamp = 90f;
+        else if (_faceIndex == 1) tarClamp = 0f;
+        else if (_faceIndex == 2) tarClamp = -90f;
+        else if (_faceIndex == 3) tarClamp = 180f;
 
-        spinSpeed = Mathf.SmoothDamp(spinSpeed, _tarSpeed * maxSpinSpeed, ref m_Velocity, 0.1f);
-        rd.rotation += spinSpeed;
+        _spinSpeed = Mathf.SmoothDamp(_spinSpeed, tarSpeed * _maxSpinSpeed, ref _velocity, 0.1f);
+        _rd.rotation += _spinSpeed;
         //rd.rotation = Mathf.Clamp(rd.rotation, -75f + _tarClamp, 75f + _tarClamp);
         // Set the position to fit into Anchor point
-        var _disHeadToSpear = Vector2.Distance(rd.position, spear.SpearHead);
-        var _targetPoint = new Vector2(spear.AnchorPoint.x + _disHeadToSpear * Mathf.Cos((rd.rotation - 90) * Mathf.Deg2Rad), spear.AnchorPoint.y + _disHeadToSpear * Mathf.Sin((rd.rotation - 90) * Mathf.Deg2Rad));
-        rd.position = _targetPoint;
+        var disHeadToSpear = Vector2.Distance(_rd.position, spear.SpearHead);
+        var targetPoint = new Vector2(spear.AnchorPoint.x + disHeadToSpear * Mathf.Cos((_rd.rotation - 90) * Mathf.Deg2Rad), spear.AnchorPoint.y + disHeadToSpear * Mathf.Sin((_rd.rotation - 90) * Mathf.Deg2Rad));
+        _rd.position = targetPoint;
     }
     public override void LateUpdateState(SpearStateManager spear)
     {
@@ -444,11 +444,11 @@ public class SpearAnchorState : SpearBaseState
 }
 public class SpearStiffState : SpearBaseState
 {
-    Rigidbody2D rd;
+    Rigidbody2D _rd;
     public override void EnterState(SpearStateManager spear)
     {
         spear.AnchorBlock = null;
-        rd = spear.GetComponent<Rigidbody2D>();
+        _rd = spear.GetComponent<Rigidbody2D>();
     }
     public override void UpdateState(SpearStateManager spear)
     {
@@ -465,6 +465,6 @@ public class SpearStiffState : SpearBaseState
     public override void LateUpdateState(SpearStateManager spear)
     {
         // Follow the player 
-        spear.transform.position = new Vector3(spear.SpearPosition.x + spear.ReachDistance * Mathf.Cos((rd.rotation + 90) * Mathf.Deg2Rad), spear.SpearPosition.y + spear.ReachDistance * Mathf.Sin((rd.rotation + 90) * Mathf.Deg2Rad), spear.transform.position.z);
+        spear.transform.position = new Vector3(spear.SpearPosition.x + spear.ReachDistance * Mathf.Cos((_rd.rotation + 90) * Mathf.Deg2Rad), spear.SpearPosition.y + spear.ReachDistance * Mathf.Sin((_rd.rotation + 90) * Mathf.Deg2Rad), spear.transform.position.z);
     }
 }

@@ -16,12 +16,15 @@ public class SpearStateManager : MonoBehaviour
     public SpearPokeState pokeState { get; private set; } = new();
     public SpearStiffState stiffState { get; private set; } = new();
     public float ReachDistance {  get; set; }
-    public CharacterStateManager Player { get { return _player; } set { _player = value; } }
-    public Vector2 SpearPosition { get { return _player.GetComponent<Rigidbody2D>().position; } }
+    public CharacterStateManager Player { 
+        get => _player;
+        set => _player = value;
+    }
+    public Vector2 SpearPosition => _player.spearPoint.position;
     public bool Anchored { get; set; }
     public Vector2 AnchorPoint { get; set; }
     public GameObject AnchorBlock { get; set; }
-    public Vector2 SpearHead { get { return _spearHead.position; } }
+    public Vector2 SpearHead => _spearHead.position;
     public Camera Cam { get { return cam; } set { cam = value; } }
     public float PokeSpeed { get { return spearPokeSpeed; } }
     public float PokeDistance { get { return spearPokeDistance; } }

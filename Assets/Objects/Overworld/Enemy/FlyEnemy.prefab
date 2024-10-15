@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5980035579669118894}
   - component: {fileID: 4872492998470434753}
   - component: {fileID: 3528680617194774381}
+  - component: {fileID: 2461661273369926016}
   m_Layer: 13
   m_Name: FlyEnemy
   m_TagString: Enemy
@@ -78,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1976318539, guid: 41b08a539c43e0f44b69b60b1061f0dd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: efb25a8e8dfec7b4892952e42cdaf0fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -137,10 +138,12 @@ MonoBehaviour:
   HurtingEvents: []
   detection: {fileID: 5980035579669118894}
   detectionDistance: 7
+  trackingDistance: 20
   target: {fileID: 0}
   speed: 5
   nextWaypointDistance: 12
   updateTime: 0.1
+  anim: {fileID: 2461661273369926016}
 --- !u!58 &5980035579669118894
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -238,3 +241,24 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!95 &2461661273369926016
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4015040018924765303}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cc3e7323b7b61e7438773f9b41c67457, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

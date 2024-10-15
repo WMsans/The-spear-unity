@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Cinemachine.DocumentationSortingAttribute;
 
 public class DashingEnemyAI : ParEnemy
 {
+    private static readonly int Speed = Animator.StringToHash("Speed");
+    private static readonly int Dashing = Animator.StringToHash("Dashing");
+    private static readonly int PreDashing = Animator.StringToHash("PreDashing");
+
     [Header("Petrolling")]
     
     [SerializeField] Collider2D detection;
@@ -12,6 +15,7 @@ public class DashingEnemyAI : ParEnemy
     [SerializeField] Transform wallCheck;
     [SerializeField] float checkRadius;
     [SerializeField] LayerMask groundLayer;
+    [SerializeField] LayerMask playerLayer;
     [SerializeField] float speed;
     [SerializeField] float accel;
     [SerializeField] float decel;
@@ -20,14 +24,16 @@ public class DashingEnemyAI : ParEnemy
     bool checkingGround = false;
     bool checkingWall = false;
     [Header("Dashing")]
-    [SerializeField] Collider2D vision;
+    [SerializeField] float vision;
     [SerializeField] float dashingSpeed;
     [SerializeField] float dashingTime;
     [SerializeField] float dashingCoolDown;
     float dashDir;
     bool dashing = false;
+    bool preDashing = false;
     bool dashCoolingDown = false;
     [Header("Others")]
+    [SerializeField] Animator anim;
     Rigidbody2D rb;
     
     private void Awake()
@@ -37,19 +43,28 @@ public class DashingEnemyAI : ParEnemy
     private void Update()
     {
         PlayerDetection(detection);
+        HandleAnimation();
         // Check for the player
-        if(vision.IsTouching(CharacterStateManager.Instance.GetComponent<Collider2D>()) && !dashing && !dashCoolingDown)
+        var ray = Physics2D.Raycast(transform.position, Vector2.right * (facingRight ? -1 : 1), vision, groundLayer | playerLayer);
+        if(ray && ray.collider.CompareTag("Player") && !dashing && !dashCoolingDown)
         {
             TargetOn();
         }
     }
+
+    void HandleAnimation()
+    {
+        anim.SetFloat(Speed, Mathf.Abs(rb.velocity.x));
+        anim.SetBool(PreDashing, preDashing);
+        anim.SetBool(Dashing, dashing);
+    }
     private IEnumerator Dash()
     {
         dashing = true;
-        if (moveDir != dashDir) Flip();
+        if (!Mathf.Approximately(moveDir, dashDir)) Flip();
         yield return new WaitForSeconds(dashingTime);
         dashing = false;
-        if (moveDir != dashDir) Flip();
+        if (!Mathf.Approximately(moveDir, dashDir)) Flip();
         dashCoolingDown = true;
         yield return new WaitForSeconds(dashingCoolDown);
         dashCoolingDown = false;
@@ -65,7 +80,12 @@ public class DashingEnemyAI : ParEnemy
     {
         //target = CharacterStateManager.Instance.transform;
         dashDir = Mathf.Sign(((Vector2)CharacterStateManager.Instance.transform.position - rb.position).normalized.x);
-        
+        preDashing = true;
+    }
+
+    public void StartDash()
+    {
+        preDashing = false;
         StartCoroutine(Dash());
     }
     void Petrolling()
@@ -85,7 +105,7 @@ public class DashingEnemyAI : ParEnemy
         if (dashing) dir = dashDir;
         var _sp = speed;
         if (dashing) _sp = dashingSpeed;
-        if (Mathf.Abs(rb.velocity.x + dir * accel) <= _sp || (Mathf.Sign(dir) != Mathf.Sign(rb.velocity.x) && Mathf.Abs(dir) > 0.001f))
+        if (Mathf.Abs(rb.velocity.x + dir * accel) <= _sp || (!Mathf.Approximately(Mathf.Sign(dir), Mathf.Sign(rb.velocity.x)) && Mathf.Abs(dir) > 0.001f))
         {
             rb.velocity += dir * accel * Vector2.right;
         }
@@ -106,10 +126,11 @@ public class DashingEnemyAI : ParEnemy
         facingRight = !facingRight;
         transform.Rotate(0f, 180f, 0f);
     }
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
         Gizmos.DrawWireSphere(wallCheck.position, checkRadius);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * vision);
     }
 }
