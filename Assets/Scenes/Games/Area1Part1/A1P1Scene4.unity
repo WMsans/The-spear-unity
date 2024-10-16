@@ -8465,6 +8465,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SplitterEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 4916316122569237569, guid: 6e75c2996b583144c8e801c83f3ec24d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7018638681585283926, guid: 6e75c2996b583144c8e801c83f3ec24d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -89.87

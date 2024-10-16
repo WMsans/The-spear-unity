@@ -703,7 +703,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -798,6 +798,10 @@ PrefabInstance:
       propertyPath: spearPoint
       value: 
       objectReference: {fileID: 509404530}
+    - target: {fileID: 3984507454129457573, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
+      propertyPath: maxFallSpeed
+      value: -20
+      objectReference: {fileID: 0}
     - target: {fileID: 4632465008465176804, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.138
@@ -852,11 +856,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8496515891089895065, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -65
+      value: -147
       objectReference: {fileID: 0}
     - target: {fileID: 8496515891089895065, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 17.5
+      value: 56
       objectReference: {fileID: 0}
     - target: {fileID: 8496515891089895065, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
       propertyPath: m_LocalPosition.z

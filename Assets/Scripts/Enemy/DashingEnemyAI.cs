@@ -45,7 +45,7 @@ public class DashingEnemyAI : ParEnemy
         PlayerDetection(detection);
         HandleAnimation();
         // Check for the player
-        var ray = Physics2D.Raycast(transform.position, Vector2.right * (facingRight ? -1 : 1), vision, groundLayer | playerLayer);
+        var ray = Physics2D.Raycast(transform.position, Vector2.right * (facingRight ? 1 : -1), vision, groundLayer | playerLayer);
         if(ray && ray.collider.CompareTag("Player") && !dashing && !dashCoolingDown)
         {
             TargetOn();
@@ -64,7 +64,6 @@ public class DashingEnemyAI : ParEnemy
         if (!Mathf.Approximately(moveDir, dashDir)) Flip();
         yield return new WaitForSeconds(dashingTime);
         dashing = false;
-        if (!Mathf.Approximately(moveDir, dashDir)) Flip();
         dashCoolingDown = true;
         yield return new WaitForSeconds(dashingCoolDown);
         dashCoolingDown = false;
@@ -105,6 +104,8 @@ public class DashingEnemyAI : ParEnemy
         if (dashing) dir = dashDir;
         var _sp = speed;
         if (dashing) _sp = dashingSpeed;
+        else if (preDashing) _sp = 0;
+        
         if (Mathf.Abs(rb.velocity.x + dir * accel) <= _sp || (!Mathf.Approximately(Mathf.Sign(dir), Mathf.Sign(rb.velocity.x)) && Mathf.Abs(dir) > 0.001f))
         {
             rb.velocity += dir * accel * Vector2.right;

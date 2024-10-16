@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class SplitterEnemyAI : ParEnemy
 {
+    private static readonly int CanSeePlayer = Animator.StringToHash("CanSeePlayer");
+    private static readonly int Cooling = Animator.StringToHash("Cooling");
+    private static readonly int Speed = Animator.StringToHash("Speed");
+
     [Header("Petrolling")]
     [SerializeField] Collider2D detection;
     [SerializeField] Transform FrontGroundCheck;
@@ -29,6 +33,7 @@ public class SplitterEnemyAI : ParEnemy
     [SerializeField] Collider2D Vision;
     bool canSeePlayer;
     [Header("Others")]
+    [SerializeField] Animator animator;
     Rigidbody2D rb;
     private void Awake()
     {
@@ -42,6 +47,14 @@ public class SplitterEnemyAI : ParEnemy
     private void Update()
     {
         PlayerDetection(detection);
+        HandleAnim();
+    }
+
+    void HandleAnim()
+    {
+        animator.SetFloat(Speed, Mathf.Abs(rb.velocity.x));
+        animator.SetBool(CanSeePlayer, canSeePlayer);
+        animator.SetBool(Cooling, coolingDown);
     }
     private void FixedUpdate()
     {
@@ -55,18 +68,16 @@ public class SplitterEnemyAI : ParEnemy
             if (Mathf.Abs(moveDir) < 0.01f)
                 moveDir = oriDir;
         }
-        else// Debug Move to animation
+        else
         {
             if (Mathf.Abs(moveDir) >= 0.01f)
                 oriDir = moveDir;
             moveDir = 0f;
-            if(!coolingDown)
-                Attack();
         }
     }
     void Petrolling()
     {
-        if(!checkingGround || checkingWall)
+        if((!checkingGround || checkingWall) && !(coolingDown || canSeePlayer))
         {
             if(facingRight)
             {
@@ -77,7 +88,7 @@ public class SplitterEnemyAI : ParEnemy
             }
         }
         var dir = moveDir;
-        if (Mathf.Abs(rb.velocity.x + dir * accel) <= speed || (Mathf.Sign(dir) != Mathf.Sign(rb.velocity.x) && Mathf.Abs(dir) > 0.001f))
+        if (Mathf.Abs(rb.velocity.x + dir * accel) <= speed || (!Mathf.Approximately(Mathf.Sign(dir), Mathf.Sign(rb.velocity.x)) && Mathf.Abs(dir) > 0.001f))
         {
             rb.velocity += dir * accel * Vector2.right;
         }
@@ -110,7 +121,7 @@ public class SplitterEnemyAI : ParEnemy
             Flip();
         }
     }
-    void Attack()
+    public void Attack()
     {
         FlipTowardsTarget();
         // Attack
