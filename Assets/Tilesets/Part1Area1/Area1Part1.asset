@@ -312,7 +312,7 @@ MonoBehaviour:
     m_RuleTransform: 0
   - m_Id: 0
     m_Sprites:
-    - {fileID: 21300000, guid: 0c70bcbc3f60a954e9746424695d049b, type: 3}
+    - {fileID: 21300000, guid: 47e6503506be62241a2ebea295d0f7ed, type: 3}
     m_GameObject: {fileID: 1448032021268024146, guid: c8d1af7957078b74eb84f0dd529c2b08, type: 3}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -654,7 +654,7 @@ MonoBehaviour:
     m_RuleTransform: 0
   - m_Id: 0
     m_Sprites:
-    - {fileID: 21300000, guid: 5fa6d2319fbf0aa45bc5523c43304b5b, type: 3}
+    - {fileID: 21300000, guid: aefeb0e94ca91b1489f7960c2f724d78, type: 3}
     m_GameObject: {fileID: 1448032021268024146, guid: f8912622880b0b745a493c36b81e0d36, type: 3}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -759,7 +759,7 @@ MonoBehaviour:
     m_RuleTransform: 0
   - m_Id: 0
     m_Sprites:
-    - {fileID: 21300000, guid: aefeb0e94ca91b1489f7960c2f724d78, type: 3}
+    - {fileID: 21300000, guid: 51de5761fc4e47f43bd0be01ed1f6c4d, type: 3}
     m_GameObject: {fileID: 1448032021268024146, guid: f8912622880b0b745a493c36b81e0d36, type: 3}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -992,10 +992,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     _gridShape: 0
-    _zoomAmount: 0.6464063
+    _zoomAmount: 0.68591136
     _gridCellSize: {x: 32, y: 32}
     _tileRenderOffset: {x: 0, y: 0}
-    _gridOffset: {x: -772.1981, y: 42.884796}
+    _gridOffset: {x: -365.97998, y: 54.33307}
     _lockWindows: 1
     _hideSprites: 0
     _showRuler: 1
@@ -3348,7 +3348,7 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 14, y: 15}
-    Sprite: {fileID: 21300000, guid: 0c70bcbc3f60a954e9746424695d049b, type: 3}
+    Sprite: {fileID: 21300000, guid: 47e6503506be62241a2ebea295d0f7ed, type: 3}
     TileID: 1
     UseDefaultSettings: 1
     AreNeighborPositionsModified: 0
@@ -4636,7 +4636,7 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 53, y: 14}
-    Sprite: {fileID: 21300000, guid: 5fa6d2319fbf0aa45bc5523c43304b5b, type: 3}
+    Sprite: {fileID: 21300000, guid: aefeb0e94ca91b1489f7960c2f724d78, type: 3}
     TileID: 2
     UseDefaultSettings: 1
     AreNeighborPositionsModified: 0
@@ -4916,7 +4916,7 @@ MonoBehaviour:
     - {x: 0, y: -1, z: 0}
     - {x: 1, y: -1, z: 0}
   - Position: {x: 64, y: 3}
-    Sprite: {fileID: 21300000, guid: aefeb0e94ca91b1489f7960c2f724d78, type: 3}
+    Sprite: {fileID: 21300000, guid: 51de5761fc4e47f43bd0be01ed1f6c4d, type: 3}
     TileID: 2
     UseDefaultSettings: 1
     AreNeighborPositionsModified: 0
