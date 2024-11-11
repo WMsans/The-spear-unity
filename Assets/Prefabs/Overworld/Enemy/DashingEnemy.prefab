@@ -267,10 +267,13 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 641
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
   speed: 3
   accel: 1.5
   decel: 1.2
-  vision: {fileID: 4707286116970232740}
+  vision: 7
   dashingSpeed: 5
   dashingTime: 2
   dashingCoolDown: 2

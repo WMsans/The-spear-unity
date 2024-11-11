@@ -18,7 +18,7 @@ public class CameraLimiter : MonoBehaviour
     }
     private void Start()
     {
-        cameraFollower = CameraFollower.instance;
+        cameraFollower = CameraFollower.Instance;
     }
     void OnTriggerStay2D(Collider2D collision)
     {

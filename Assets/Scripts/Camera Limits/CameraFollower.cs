@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraFollower : MonoBehaviour, IDataPersistence
 {
-    public static CameraFollower instance;
+    public static CameraFollower Instance { get; private set; }
     [SerializeField] Transform follow;
     [SerializeField] Camera cam;
     [SerializeField] float followSpeed = 0.3f;
@@ -17,14 +17,14 @@ public class CameraFollower : MonoBehaviour, IDataPersistence
     public CameraLimiter CameraLimiter { get; set; } = null;
     void Awake()
     {
-        if (instance != null)
+        if (Instance != null)
         {
             Destroy(gameObject);
             Debug.LogError("Found more than one Virtual Camera in the scene.");
         }
         else
         {
-            instance = this;
+            Instance = this;
         }
             
     }

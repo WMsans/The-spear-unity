@@ -174,7 +174,6 @@ public class SlashEnemyAI : ParEnemy
     {
         if (!checkingGround || checkingWall)
         {
-            Debug.Log(checkingGround + " " + checkingWall);
             if (facingRight)
             {
                 Flip();
