@@ -408,7 +408,7 @@ public class SpearAnchorState : SpearBaseState
     {
         // Rotate the spear
         var tarSpeed = 0f;
-        var tarClamp = 0f;
+        //var tarClamp = 0f;
         if(_faceIndex == 0 || _faceIndex == 2)// Right and Left
         {
             tarSpeed = Input.GetAxisRaw("Vertical");
@@ -420,10 +420,10 @@ public class SpearAnchorState : SpearBaseState
             if (_faceIndex == 3) tarSpeed *= -1;
         }
 
-        if (_faceIndex == 0) tarClamp = 90f;
+        /*if (_faceIndex == 0) tarClamp = 90f;
         else if (_faceIndex == 1) tarClamp = 0f;
         else if (_faceIndex == 2) tarClamp = -90f;
-        else if (_faceIndex == 3) tarClamp = 180f;
+        else if (_faceIndex == 3) tarClamp = 180f;*/
 
         _spinSpeed = Mathf.SmoothDamp(_spinSpeed, tarSpeed * _maxSpinSpeed, ref _velocity, 0.1f);
         _rd.rotation += _spinSpeed;

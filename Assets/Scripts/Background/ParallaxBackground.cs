@@ -5,7 +5,7 @@ using UnityEngine;
 public class ParallaxBackground : MonoBehaviour
 {
     [SerializeField] ParallaxCamera parallaxCamera;
-    List<ParallaxLayer> parallaxLayers = new List<ParallaxLayer>();
+    private List<ParallaxLayer> parallaxLayers;
  
     void Start()
     {
@@ -21,7 +21,7 @@ public class ParallaxBackground : MonoBehaviour
  
     void SetLayers()
     {
-        parallaxLayers.Clear();
+        parallaxLayers = new();
  
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -35,7 +35,7 @@ public class ParallaxBackground : MonoBehaviour
         }
     }
  
-    void Move(float delta)
+    void Move(Vector2 delta)
     {
         foreach (ParallaxLayer layer in parallaxLayers)
         {
