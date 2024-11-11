@@ -2144,6 +2144,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - GHOST_ON
   - HITEFFECT_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -2248,9 +2249,9 @@ Material:
     - _FlickerAlpha: 0
     - _FlickerFreq: 0.2
     - _FlickerPercent: 0.05
-    - _GhostBlend: 1
+    - _GhostBlend: 0
     - _GhostColorBoost: 1
-    - _GhostTransparency: 0
+    - _GhostTransparency: 1
     - _GlitchAmount: 10.3
     - _GlitchSize: 3.4
     - _Glow: 100
@@ -2735,9 +2736,25 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1632774934}
+    - target: {fileID: 3984507454129457573, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
+      propertyPath: invincible
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4763166622750273431, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.895
+      objectReference: {fileID: 0}
     - target: {fileID: 7013269819672220296, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
       propertyPath: m_Name
       value: PlayerBody
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305657975304369336, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.414
+      objectReference: {fileID: 0}
+    - target: {fileID: 7305657975304369336, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.911
       objectReference: {fileID: 0}
     - target: {fileID: 8496515891089895065, guid: ed7492dfb05724547be0d09c4868ab8e, type: 3}
       propertyPath: m_LocalPosition.x

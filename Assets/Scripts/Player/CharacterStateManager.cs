@@ -33,6 +33,7 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     [SerializeField] GameObject m_SpearObject;
     public Transform spearPoint;
     public Animator animator;
+    private Material _mat;
     public static CharacterStateManager Instance { get; private set; }
 
 
@@ -73,7 +74,7 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     public int BoucedFace { get; set; } = -1;
     public int AllowMoveTimer { get; set; } = 0;
     public float MaxFallSpeed { get { return maxFallSpeed; } }
-    public Vector2 SavePosition { get; set; } = new();
+    public Vector2 SavePosition { get; set; }
     public float Stiff { get { return stiff; } }
     public float Invincible {  get { return invincible; } }
     public float InvincibleTimer { get; set; }
@@ -89,6 +90,7 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
         {
             Instance = this;
         }
+        _mat = GetComponent<Renderer>().material;
     }
 
     void Start()
@@ -135,15 +137,52 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
     }
     private IEnumerator FlashAfterHurt()
     {
-        var flashDelay = 0.0833f;
-        var sprite = GetComponent<SpriteRenderer>();
-        for (InvincibleTimer = Invincible; InvincibleTimer > 0f; InvincibleTimer--)
+        var flashTime = .25f;
+        var ghostTime = .25f;
+        var ghost = 0;
+        var lighted = false;
+        InvincibleTimer = Invincible;
+        while (InvincibleTimer > 0)
         {
-            sprite.enabled = false;
-            yield return new WaitForSeconds(flashDelay);
-            sprite.enabled = true;
-            yield return new WaitForSeconds(flashDelay);
+            InvincibleTimer -= Time.deltaTime;
+            if (Invincible - InvincibleTimer <= flashTime)
+            {
+                _mat.SetFloat("_HitEffectBlend", BetterLerp.Lerp(1, 0, (Invincible - InvincibleTimer) / flashTime, BetterLerp.LerpType.Sin));
+            }
+            else
+            {
+                if (lighted)
+                {
+                    _mat.SetFloat("_GhostBlend",
+                        BetterLerp.Lerp(1, 0,
+                            (Invincible - InvincibleTimer - flashTime - ghost * ghostTime) / ghostTime,
+                            BetterLerp.LerpType.Sin));
+                    if (Invincible - InvincibleTimer - flashTime - ghost * ghostTime > ghostTime)
+                    {
+                        lighted = false;
+                        ghost++;
+                    }
+                }
+                else
+                {
+                    _mat.SetFloat("_GhostBlend",
+                        BetterLerp.Lerp(0, 1,
+                            (Invincible - InvincibleTimer - flashTime - ghost * ghostTime) / ghostTime,
+                            BetterLerp.LerpType.Sin));
+                    if (Invincible - InvincibleTimer - flashTime - ghost * ghostTime > ghostTime)
+                    {
+                        lighted = true;
+                        ghost++;
+                    }
+                }
+                Debug.Log((Invincible - InvincibleTimer - flashTime - ghost * ghostTime) / ghostTime);
+            }
+            yield return null;
         }
+
+        InvincibleTimer = 0;
+        _mat.SetFloat("_HitEffectBlend", 0);
+        _mat.SetFloat("_GhostBlend", 0);
     }
     public void Die()
     {

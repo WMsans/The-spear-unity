@@ -131,11 +131,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attack: 1
-  maxHP: 9
+  maxHp: 6
   coinNumber: 3
   coinPrefab: {fileID: 5677224635280632684, guid: 8ac1dc77479a2fb4b9514b375a6a0413, type: 3}
   beatBack: 500
-  HurtingEvents: []
+  hurtingEvents: []
   detection: {fileID: 5980035579669118894}
   detectionDistance: 7
   trackingDistance: 20

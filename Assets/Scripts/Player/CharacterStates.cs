@@ -18,6 +18,7 @@ public class CharacterNormalState : CharacterBaseState
 {
     private static readonly int Speed = Animator.StringToHash("Speed");
     private static readonly int Grounded = Animator.StringToHash("Grounded");
+    private static readonly int SpeedY = Animator.StringToHash("SpeedY");
     float m_JumpForce = 400f;                          // Amount of force added when the player jumps.
     float m_CrouchSpeed = .36f;                        // Amount of maxSpeed applied to crouching movement. 1 = 100%
     float m_MovementSmoothing = .05f;                  // How much to smooth out the movement
@@ -100,6 +101,7 @@ public class CharacterNormalState : CharacterBaseState
     void HandleAnimator(Animator animator)
     {
         animator.SetFloat(Speed, Mathf.Abs(m_Rigidbody2D.velocity.x));
+        animator.SetFloat(SpeedY, m_Rigidbody2D.velocity.y);
         animator.SetBool(Grounded, m_Grounded);
     }
     public override void FixedUpdateState(CharacterStateManager chara)
@@ -111,7 +113,7 @@ public class CharacterNormalState : CharacterBaseState
 
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(new Vector2(m_GroundCheck.position.x, m_GroundCheck.position.y - m_GroundBuff), k_GroundedRadius, m_WhatIsGround);
+        var colliders = Physics2D.OverlapCircleAll(new Vector2(m_GroundCheck.position.x, m_GroundCheck.position.y - m_GroundBuff), k_GroundedRadius, m_WhatIsGround);
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].isActiveAndEnabled && colliders[i].gameObject != chara.gameObject)
