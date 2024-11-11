@@ -218,7 +218,7 @@ public class SpearPokeState : SpearBaseState
             }
             else if (collision.gameObject.CompareTag("Shield"))
             {
-                collision.GetComponent<Shield>().Poked(anchorPoint);
+                collision.GetComponent<ShieldEnemyAI>().Poked(anchorPoint);
                 spear.ReadyToPokeTimer = spear.ReadyToPokeTime;
 
                 var _playerRd = spear.Player.GetComponent<Rigidbody2D>();

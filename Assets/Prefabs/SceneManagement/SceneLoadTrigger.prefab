@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6220736457887819068}
   - component: {fileID: 7094951976880974626}
   - component: {fileID: 983245161150932110}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SceneLoadTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,4 +91,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scenesToLoad: []
-  scenesToUnload: []

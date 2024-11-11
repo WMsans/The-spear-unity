@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2310026495193855863}
   m_Layer: 13
   m_Name: ShieldEnemy
-  m_TagString: Enemy
+  m_TagString: Shield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 849941362028951241}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -129.13, y: 41.06, z: 0.01204074}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -82,9 +82,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 743610334, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 87c2b148c962ef948adcdf7dcc42d5e0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1.21, y: 1.74}
@@ -103,7 +103,7 @@ Animator:
   m_GameObject: {fileID: 849941362028951241}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 609592acdb31c33458b44ba0960503f8, type: 2}
+  m_Controller: {fileID: 9100000, guid: 22e676cf3ee53ce458890c0264b31fd7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -185,7 +185,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
-    oldSize: {x: 1.890625, y: 2.71875}
+    oldSize: {x: 1.9609375, y: 3.203125}
     newSize: {x: 1.21, y: 1.74}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -234,11 +234,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attack: 1
-  maxHP: 21
+  maxHp: 21
   coinNumber: 0
   coinPrefab: {fileID: 5677224635280632684, guid: 8ac1dc77479a2fb4b9514b375a6a0413, type: 3}
   beatBack: 0
-  HurtingEvents: []
+  hurtingEvents: []
   detection: {fileID: 6247438365607079698}
   vision: {fileID: 3562207253233221017}
   playerLayer:
@@ -255,7 +255,6 @@ MonoBehaviour:
   speed: 3
   accel: 1.5
   decel: 1.2
-  shieldPrefab: {fileID: 1693198242017066563, guid: 6970a22bdb3b4754b9085ae104aa657b, type: 3}
   center: {fileID: 7579799345525588534}
 --- !u!1 &2607446287348964973
 GameObject:

@@ -48,6 +48,7 @@ public class SlashEnemyAI : ParEnemy
     private void Update()
     {
         PlayerDetection(detection);
+        anim.SetFloat("Velocity", Mathf.Abs(rb.velocity.x));
         // Detecting player
         
         if (vision.IsTouchingLayers(playerLayer))
@@ -173,6 +174,7 @@ public class SlashEnemyAI : ParEnemy
     {
         if (!checkingGround || checkingWall)
         {
+            Debug.Log(checkingGround + " " + checkingWall);
             if (facingRight)
             {
                 Flip();

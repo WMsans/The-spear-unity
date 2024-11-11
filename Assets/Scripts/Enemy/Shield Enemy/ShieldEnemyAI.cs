@@ -17,6 +17,7 @@ public class ShieldEnemyAI : ParEnemy
     bool inRange;
     bool cooling;
     float attackCooldownTimer;
+    public bool ShieldHeld { get; set; }
     [Header("Petrolling")]
     [SerializeField] Transform groundCheck;
     [SerializeField] Transform wallCheck;
@@ -30,21 +31,12 @@ public class ShieldEnemyAI : ParEnemy
     bool checkingGround = false;
     bool checkingWall = false;
     [Header("Others")]
-    [SerializeField] GameObject shieldPrefab;
     [SerializeField] Transform center;
-    GameObject shield;
     public bool ShieldPoked { get; set; }
     Rigidbody2D rb;
     private void Awake()
     {
         attackCooldownTimer = attackCooldown;
-
-        if(shield == null)
-        {
-            shield = Instantiate(shieldPrefab, transform.parent);
-            shield.GetComponent<Shield>().enemy = this.gameObject;
-            shield.GetComponent<Shield>().enemyCenter = center;
-        }
 
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
@@ -60,6 +52,7 @@ public class ShieldEnemyAI : ParEnemy
         else
         {
             inRange = false;
+            anim.SetBool("ShieldHold", false);
         }
         // Set State
         
@@ -80,6 +73,7 @@ public class ShieldEnemyAI : ParEnemy
     {
         target = CharacterStateManager.Instance.transform;
         FlipTowardsTarget();
+        anim.SetBool("ShieldHold", true);
         inRange = true;
     }
     void CoolDown()
@@ -107,7 +101,7 @@ public class ShieldEnemyAI : ParEnemy
         else
         {
             if (Mathf.Abs(moveDir) < 0.01f) moveDir = facingRight ? 1f : -1f;
-            anim.SetBool("canWalk", true);
+            anim.SetFloat("Velocity", rb.velocity.x);
             StopAttack();
         }
     }
@@ -115,14 +109,14 @@ public class ShieldEnemyAI : ParEnemy
     {
         tarDistance = Vector2.Distance(rb.position, target.position);
         if (Mathf.Abs(moveDir) >= 0.01f) moveDir = 0f;
-
+        
         if (tarDistance > attackDistance)
         {
             if (cooling)
             {
                 StopAttack();
             }
-            anim.SetBool("canWalk", false);
+            anim.SetFloat("Velocity", rb.velocity.x);
         }
         else if (!cooling && ShieldPoked)
         {
@@ -131,29 +125,22 @@ public class ShieldEnemyAI : ParEnemy
         if (cooling)
         {
             CoolDown();
-            anim.SetBool("attack", false);
         }
+        
     }
     void Attack()
     {
         attackCooldownTimer = attackCooldown;
         attacking = true;
-        anim.SetBool("canWalk", false);
-        anim.SetBool("attack", true);
+        anim.SetFloat("Velocity", rb.velocity.x);
+        anim.SetBool("Attack", true);
     }
     void StopAttack()
     {
         attacking = false;
         cooling = false;
-        anim.SetBool("attack", false);
-    }
-    public void HoldShield()
-    {
-        shield.SetActive(true);
-    }
-    public void DisHoldShield() 
-    {
-        shield.SetActive(false);
+        ShieldPoked = false;
+        anim.SetBool("Attack", false);
     }
     void Petrolling()
     {
@@ -195,6 +182,7 @@ public class ShieldEnemyAI : ParEnemy
     {
         cooling = true;
         ShieldPoked = false;
+        StopAttack();
     }
     private void OnDrawGizmosSelected()
     {
@@ -202,8 +190,26 @@ public class ShieldEnemyAI : ParEnemy
         Gizmos.DrawWireSphere(groundCheck.position, checkRadius);
         Gizmos.DrawWireSphere(wallCheck.position, checkRadius);
     }
-    private void OnDestroy()
+
+    public void Poked(Vector2 point)
     {
-        Destroy(shield);
+        if (ShieldHeld)
+        {
+            ShieldPoked = true;
+        }
+        else
+        {
+            Hurt(HPCounter.instance.Attack, point);
+        }
+    }
+
+    public void ShieldHolding()
+    {
+        ShieldHeld = true;
+    }
+
+    public void ShieldUnHolding()
+    {
+        ShieldHeld = false;
     }
 }
