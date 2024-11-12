@@ -44,8 +44,7 @@ public class SpearNormalState : SpearBaseState
 
         var lookDir = _mousePos - spear.SpearPosition;
         var angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        _rd.rotation = angle;
-
+        spear.transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
     public override void LateUpdateState(SpearStateManager spear)
     {
@@ -94,7 +93,7 @@ public class SpearPokeState : SpearBaseState
     {
         var lookDir = _mousePos - spear.SpearPosition;
         var angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        _rd.rotation = angle;
+        spear.transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
         Collider2D[] cols = new Collider2D[102];
         var colNum = _rd.OverlapCollider(new ContactFilter2D().NoFilter(), cols);

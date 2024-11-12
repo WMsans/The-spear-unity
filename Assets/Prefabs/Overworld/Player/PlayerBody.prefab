@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 952666154936641397}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.675, y: -0.5, z: 0}
+  m_LocalPosition: {x: 0.675, y: -0.895, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -87,7 +87,7 @@ Transform:
   m_GameObject: {fileID: 5695590653744029032}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.335, y: -0.5, z: 0}
+  m_LocalPosition: {x: -0.414, y: -0.911, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -157,7 +157,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 8e43afc2f3b918743b9537b8902a6cb4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -342,7 +342,7 @@ MonoBehaviour:
   fallMultiplier: 5
   maxFallSpeed: -20
   stiff: 1.5
-  invincible: 10
+  invincible: 3
   m_Camera: {fileID: 0}
   spear: {fileID: 0}
   m_SpearObject: {fileID: 2471405703980496222, guid: 36c97213ba97fc943baad04b660ffbcd, type: 3}
