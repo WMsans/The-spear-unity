@@ -109,7 +109,6 @@ GameObject:
   - component: {fileID: 7691333353740649923}
   - component: {fileID: 3984507454129457573}
   - component: {fileID: 1167278905807266670}
-  - component: {fileID: 1211056751934019725}
   m_Layer: 6
   m_Name: PlayerBody
   m_TagString: Player
@@ -157,7 +156,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8e43afc2f3b918743b9537b8902a6cb4, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -369,22 +368,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1211056751934019725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7013269819672220296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee158225ee1e59f4791627785501d950, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentShaderType: 0
-  normalStrength: 5
-  normalSmoothing: 1
-  computingNormal: 0
 --- !u!1 &7020465116064094182
 GameObject:
   m_ObjectHideFlags: 0

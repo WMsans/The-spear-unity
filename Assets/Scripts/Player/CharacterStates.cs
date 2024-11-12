@@ -311,6 +311,14 @@ public class CharacterAnchorState : CharacterBaseState
         {
             chara.SwitchState(chara.normalState);
         }
+
+        HandleAnimator(chara.animator);
+    }
+    void HandleAnimator(Animator animator)
+    {
+        animator.SetFloat("Speed", 0);
+        animator.SetFloat("SpeedY", -1f);
+        animator.SetBool("Grounded", false);
     }
     public override void FixedUpdateState(CharacterStateManager chara)
     {

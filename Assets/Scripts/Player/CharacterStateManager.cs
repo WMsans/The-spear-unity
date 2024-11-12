@@ -147,14 +147,14 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
             InvincibleTimer -= Time.deltaTime;
             if (Invincible - InvincibleTimer <= flashTime)
             {
-                _mat.SetFloat("_HitEffectBlend", BetterLerp.Lerp(1, 0, (Invincible - InvincibleTimer) / flashTime, BetterLerp.LerpType.Sin));
+                _mat.SetFloat("_FlashAmount", BetterLerp.Lerp(1, 0, (Invincible - InvincibleTimer) / flashTime, BetterLerp.LerpType.Sin));
             }
             else
             {
                 if (lighted)
                 {
-                    _mat.SetFloat("_GhostBlend",
-                        BetterLerp.Lerp(1, 0,
+                    _mat.SetFloat("_Alpha",
+                        BetterLerp.Lerp(0, 1,
                             (Invincible - InvincibleTimer - flashTime - ghost * ghostTime) / ghostTime,
                             BetterLerp.LerpType.Sin));
                     if (Invincible - InvincibleTimer - flashTime - ghost * ghostTime > ghostTime)
@@ -165,8 +165,8 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
                 }
                 else
                 {
-                    _mat.SetFloat("_GhostBlend",
-                        BetterLerp.Lerp(0, 1,
+                    _mat.SetFloat("_Alpha",
+                        BetterLerp.Lerp(1, 0,
                             (Invincible - InvincibleTimer - flashTime - ghost * ghostTime) / ghostTime,
                             BetterLerp.LerpType.Sin));
                     if (Invincible - InvincibleTimer - flashTime - ghost * ghostTime > ghostTime)
@@ -181,8 +181,8 @@ public class CharacterStateManager : MonoBehaviour, IDataPersistence
         }
 
         InvincibleTimer = 0;
-        _mat.SetFloat("_HitEffectBlend", 0);
-        _mat.SetFloat("_GhostBlend", 0);
+        _mat.SetFloat("_FlashAmount", 0);
+        _mat.SetFloat("_Alpha", 1);
     }
     public void Die()
     {
