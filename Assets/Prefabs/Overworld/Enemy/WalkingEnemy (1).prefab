@@ -141,9 +141,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.17264032, g: 0, b: 0.5137255, a: 1}
-  m_FlipX: 0
+  m_Sprite: {fileID: 21300000, guid: cd81cbe3d28697a47ae3e1e8e901c875, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
@@ -188,14 +188,14 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.0332031, y: 0.7832031}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.7, y: 0.77}
   m_EdgeRadius: 0
 --- !u!50 &2454983965013447973
 Rigidbody2D:
@@ -257,7 +257,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.7, y: 0.77}
   m_Direction: 0
 --- !u!114 &4296817126605010693
 MonoBehaviour:
@@ -272,11 +272,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attack: 1
-  maxHP: 5
+  maxHp: 5
   coinNumber: 2
   coinPrefab: {fileID: 5677224635280632684, guid: 8ac1dc77479a2fb4b9514b375a6a0413, type: 3}
   beatBack: 750
-  HurtingEvents: []
+  hurtingEvents: []
   detection: {fileID: 1505358106842715616}
   groundCheck: {fileID: 4521568319501073827}
   wallCheck: {fileID: 3655902667652754314}

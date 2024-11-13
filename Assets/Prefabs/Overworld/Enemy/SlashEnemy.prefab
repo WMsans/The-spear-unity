@@ -112,9 +112,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 743610334, guid: 5e55520c38336de49aac607436b5d472, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c110017eb4ccdc4458058231d8dbab1f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1.21, y: 1.74}
@@ -214,8 +214,8 @@ BoxCollider2D:
   m_Offset: {x: -0.1684341, y: 0.924511}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 1.890625, y: 2.71875}
+    pivot: {x: 0.5, y: 0.16}
+    oldSize: {x: 5.31, y: 4.1}
     newSize: {x: 1.21, y: 1.74}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -264,11 +264,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attack: 1
-  maxHP: 21
+  maxHp: 21
   coinNumber: 0
   coinPrefab: {fileID: 5677224635280632684, guid: 8ac1dc77479a2fb4b9514b375a6a0413, type: 3}
   beatBack: 500
-  HurtingEvents: []
+  hurtingEvents: []
   detection: {fileID: 1974482041325319097}
   vision: {fileID: 2580579886162104915}
   rayCast: {fileID: 4649352763039719314}

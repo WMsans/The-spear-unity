@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1112442106016199359}
   - component: {fileID: 8026271856907108162}
   - component: {fileID: 8983107950903316894}
+  - component: {fileID: 8571974878212364561}
   m_Layer: 9
   m_Name: Gold
   m_TagString: BreakableBlock
@@ -147,3 +148,24 @@ MonoBehaviour:
   coinNumber: 10
   id: 6c13f259-2dbf-4241-952f-641336a565fa
   coinPrefab: {fileID: 5677224635280632684, guid: 8ac1dc77479a2fb4b9514b375a6a0413, type: 3}
+--- !u!114 &8571974878212364561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1193349283157759508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc855704b1da2ce4ab566f8de7fcb568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 21300000, guid: 830ce351fe21a1b45bce57835302db67, type: 3}
+  - {fileID: 21300000, guid: ca792c68e4957544ab679439ad3380a1, type: 3}
+  - {fileID: 21300000, guid: 8ef2c0a7b420b9d4586093643c48105f, type: 3}
+  - {fileID: 21300000, guid: b27f9a34337706644bc00ad96cbcf00f, type: 3}
+  - {fileID: 21300000, guid: c96e06c349b0f2a46abd4b78b367af53, type: 3}
+  - {fileID: 21300000, guid: c312ad98f8a6ba142aeb7ad8e7205fea, type: 3}
+  - {fileID: 21300000, guid: 6812c5df5e57bde4f8078246d38a3952, type: 3}
+  - {fileID: 21300000, guid: 6437733ede5afbe4ab59d31b5497339f, type: 3}
