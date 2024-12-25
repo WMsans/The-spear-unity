@@ -964,8 +964,12 @@ MonoBehaviour:
     m_SceneAsset: {fileID: 102900000, guid: ab7daa84566d2c045b9e0700448f1a7c, type: 3}
     m_SceneName: PersistentGameplay
   levelScene:
-    m_SceneAsset: {fileID: 102900000, guid: 45d9d7713db431e4bac4df9c4ba0a20a, type: 3}
-    m_SceneName: test
+  - m_SceneAsset: {fileID: 102900000, guid: d5bb69090d8eedf4f85d97608db16ade, type: 3}
+    m_SceneName: A1P1Scene1
+  - m_SceneAsset: {fileID: 102900000, guid: 158c7078b9522e146bf1b7876b221143, type: 3}
+    m_SceneName: A1P1Scene2
+  - m_SceneAsset: {fileID: 102900000, guid: 993d4f3fd2dfd6344bc0774208ebef33, type: 3}
+    m_SceneName: A1P1Scene3
 --- !u!1 &1555264120
 GameObject:
   m_ObjectHideFlags: 0

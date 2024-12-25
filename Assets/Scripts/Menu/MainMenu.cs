@@ -13,8 +13,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Slider loadingBar;
     [Header("Scenes to Load")]
     [SerializeField] SceneField persistanceGameplay;
-    [SerializeField] SceneField levelScene;
-    List<AsyncOperation> scenesToLoad = new List<AsyncOperation>();
+    [SerializeField] List<SceneField> levelScene;
+    List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
     private void Awake()
     {
         
@@ -26,8 +26,9 @@ public class MainMenu : MonoBehaviour
         loadingBarObject.SetActive(true);
         HideMenu();
         //Load the scene
-        scenesToLoad.Add(SceneManager.LoadSceneAsync(persistanceGameplay));
-        scenesToLoad.Add(SceneManager.LoadSceneAsync(levelScene, LoadSceneMode.Additive));   
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync(persistanceGameplay));
+        foreach(var scene in levelScene)
+            _scenesToLoad.Add(SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive));   
         
         //Update the bar
         StartCoroutine(ProgressLoadingBar());
@@ -48,8 +49,8 @@ public class MainMenu : MonoBehaviour
     IEnumerator ProgressLoadingBar()
     {
         var loadProgress = 0f;
-        var scenesNum = scenesToLoad.Count;
-        foreach (var go in scenesToLoad)
+        var scenesNum = _scenesToLoad.Count;
+        foreach (var go in _scenesToLoad)
         {
             while (go.isDone)
             {
